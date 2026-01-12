@@ -56,13 +56,16 @@ class ContactInfo:
     department: Optional[str] = None
     email: Optional[str] = None
     phone: Optional[str] = None
+    website: Optional[str] = None
+    address: Optional[str] = None
+    contact_type: Optional[str] = None  # 'general_counsel' or 'oir'
+    source_url: Optional[str] = None
+    # Legacy fields for backwards compatibility
     fax: Optional[str] = None
     office: Optional[str] = None
-    website: Optional[str] = None
     linkedin: Optional[str] = None
     twitter: Optional[str] = None
     mailing_address: Optional[str] = None
-    source_url: Optional[str] = None
     last_updated: Optional[str] = None
 
     def to_dict(self):
@@ -232,50 +235,67 @@ class UniversityContactFinder:
 
     def _create_prompt(self, university_name: str, search_context: Optional[str] = None) -> str:
         """Create the prompt for finding contact information"""
-        base_prompt = f"""Find contact information for the Office of Institutional Research (or similar departments like Institutional Effectiveness, Analytics, Planning and Assessment) at {university_name}.
+        base_prompt = f"""Find contact information for {university_name}. Search in this PRIORITY ORDER:
 
-Also check related departments if IR office is not found:
-- Office of Admissions
-- Office of the Provost
-- Academic Affairs
-- Financial Aid
-- Enrollment Management
+**PRIORITY 1 - General Counsel (MOST IMPORTANT):**
+- Office of General Counsel
+- University Legal Counsel
+- Chief Legal Officer
+- University Attorney
+- Legal Affairs Office
 
-For each contact found, extract:
-- Name
-- Title/Position
-- Department
-- Email address
-- Phone number
-- Fax number (if available)
-- Office location
-- Website URL
-- LinkedIn profile (if available)
-- Twitter/X handle (if available)
-- Mailing address
-- Source URL where information was found
+**PRIORITY 2 - Office of Institutional Research (OIR):**
+- Director of Institutional Research
+- Head of Institutional Research
+- Manager of Institutional Research
+- Office of Institutional Effectiveness
+- Analytics and Planning Director
+
+Return contacts in priority order: General Counsel contact FIRST, then OIR Director/Manager SECOND.
+
+For each contact found, extract these fields:
+- name (full name)
+- title (job title/position)
+- department (department name)
+- email (email address)
+- phone (phone number with area code)
+- website (department or contact page URL)
+- address (physical/mailing address including building, room, street, city, state, zip)
+- source_url (URL where information was found)
 
 Return the results as a JSON array of contact objects. If no contacts are found, return an empty array.
 
 Example format:
 [
   {{
-    "name": "Dr. Jane Smith",
+    "name": "John Smith",
+    "title": "General Counsel",
+    "department": "Office of General Counsel",
+    "email": "john.smith@university.edu",
+    "phone": "(555) 123-4567",
+    "website": "https://university.edu/legal",
+    "address": "Legal Building, Suite 100, 123 University Ave, City, ST 12345",
+    "source_url": "https://university.edu/legal/contact",
+    "contact_type": "general_counsel"
+  }},
+  {{
+    "name": "Dr. Jane Doe",
     "title": "Director of Institutional Research",
     "department": "Office of Institutional Research",
-    "email": "jane.smith@university.edu",
-    "phone": "(555) 123-4567",
-    "office": "Admin Building, Room 202",
+    "email": "jane.doe@university.edu",
+    "phone": "(555) 987-6543",
     "website": "https://university.edu/ir",
+    "address": "Admin Building, Room 202, 456 Campus Dr, City, ST 12345",
     "source_url": "https://university.edu/ir/contact",
-    "last_updated": "{datetime.now().strftime('%Y-%m-%d')}"
+    "contact_type": "oir"
   }}
 ]
 
 Important:
-- Only include verified, current information
-- Prefer official university websites
-- Include multiple contacts if available
+- PRIORITIZE General Counsel - return this contact FIRST if found
+- Return OIR Director/Manager as second contact
+- Only include verified, current information from official university websites
+- Include physical address with building, room number, street, city, state, zip when available
 - If information is uncertain, omit that field
 - Return valid JSON only, no additional text"""
 
@@ -400,7 +420,8 @@ Important:
         skip_existing: bool = False
     ) -> pd.DataFrame:
         """
-        Process Excel or CSV file with university names and add contact information
+        Process Excel or CSV file with university names and add contact information.
+        Creates one row per contact found (normalized format for easy sorting/filtering).
 
         Args:
             input_file: Path to input Excel/CSV file
@@ -412,110 +433,135 @@ Important:
             skip_existing: Skip universities that already have contacts (default: False)
 
         Returns:
-            DataFrame with results
+            DataFrame with results (one row per contact)
         """
         print(f"\n{'='*60}")
         print(f"University Contact Finder")
         print(f"Provider: {self.provider} | Model: {self.model}")
+        print(f"Output Format: One row per contact")
         print(f"{'='*60}")
 
         # Read input file (supports both CSV and Excel)
         print(f"\n[READING] {input_file}...")
         if input_file.lower().endswith('.csv'):
-            df = pd.read_csv(input_file)
+            df_input = pd.read_csv(input_file)
             file_type = 'csv'
         else:
-            df = pd.read_excel(input_file, sheet_name=sheet_name)
+            df_input = pd.read_excel(input_file, sheet_name=sheet_name)
             file_type = 'excel'
 
-        if university_column not in df.columns:
-            raise ValueError(f"Column '{university_column}' not found. Available columns: {list(df.columns)}")
+        if university_column not in df_input.columns:
+            raise ValueError(f"Column '{university_column}' not found. Available columns: {list(df_input.columns)}")
 
-        print(f"  Found {len(df)} universities")
+        print(f"  Found {len(df_input)} universities")
 
         # Apply filters
         if start_row > 0:
-            df = df.iloc[start_row:]
+            df_input = df_input.iloc[start_row:]
             print(f"  Starting from row {start_row}")
 
         # Check for existing contacts and skip if requested
-        if skip_existing and 'has_existing_contact' in df.columns:
-            df_to_process = df[~df['has_existing_contact']]
-            skipped_count = len(df) - len(df_to_process)
+        if skip_existing and 'has_existing_contact' in df_input.columns:
+            df_to_process = df_input[~df_input['has_existing_contact']]
+            skipped_count = len(df_input) - len(df_to_process)
             print(f"  Skipping {skipped_count} universities with existing contacts")
             print(f"  {len(df_to_process)} universities need contact info")
-            df = df_to_process
+            df_input = df_to_process
 
         if max_universities:
-            df = df.head(max_universities)
+            df_input = df_input.head(max_universities)
             print(f"  Processing first {max_universities} universities")
 
-        # Add columns for contact information
+        # Get original columns from input file
+        original_columns = list(df_input.columns)
+
+        # Contact-specific columns to add
         contact_columns = [
-            'contact_1_name', 'contact_1_title', 'contact_1_department', 'contact_1_email',
-            'contact_1_phone', 'contact_1_office', 'contact_1_website',
-            'contact_2_name', 'contact_2_title', 'contact_2_department', 'contact_2_email',
-            'contact_2_phone', 'contact_2_office', 'contact_2_website',
-            'contact_3_name', 'contact_3_title', 'contact_3_department', 'contact_3_email',
-            'contact_3_phone', 'contact_3_office', 'contact_3_website',
-            'search_status', 'contacts_found', 'last_updated', 'source_urls'
+            'contact_type', 'contact_name', 'contact_title', 'contact_department',
+            'contact_email', 'contact_phone', 'contact_website', 'contact_address',
+            'contact_source_url', 'search_status', 'last_updated'
         ]
 
-        for col in contact_columns:
-            if col not in df.columns:
-                df[col] = None
+        # Initialize output list to collect all rows
+        output_rows = []
 
         # Process each university
-        total = len(df)
-        for idx, row in df.iterrows():
+        total = len(df_input)
+        total_contacts = 0
+
+        for idx, row in df_input.iterrows():
             university = row[university_column]
-            print(f"\n[{idx - df.index[0] + 1}/{total}] Processing: {university}")
+            print(f"\n[{idx - df_input.index[0] + 1}/{total}] Processing: {university}")
 
             try:
                 contacts = self.find_contacts(university)
 
-                # Store up to 3 contacts
-                for i, contact in enumerate(contacts[:3]):
-                    prefix = f'contact_{i+1}_'
-                    df.at[idx, f'{prefix}name'] = contact.name
-                    df.at[idx, f'{prefix}title'] = contact.title
-                    df.at[idx, f'{prefix}department'] = contact.department
-                    df.at[idx, f'{prefix}email'] = contact.email
-                    df.at[idx, f'{prefix}phone'] = contact.phone
-                    df.at[idx, f'{prefix}office'] = contact.office
-                    df.at[idx, f'{prefix}website'] = contact.website
+                if contacts:
+                    # Create one row per contact, preserving original university data
+                    for contact in contacts:
+                        new_row = row.to_dict()  # Copy original row data
+                        new_row['contact_type'] = contact.contact_type or contact.department or 'unknown'
+                        new_row['contact_name'] = contact.name
+                        new_row['contact_title'] = contact.title
+                        new_row['contact_department'] = contact.department
+                        new_row['contact_email'] = contact.email
+                        new_row['contact_phone'] = contact.phone
+                        new_row['contact_website'] = contact.website
+                        new_row['contact_address'] = contact.address or contact.mailing_address or contact.office
+                        new_row['contact_source_url'] = contact.source_url
+                        new_row['search_status'] = 'completed'
+                        new_row['last_updated'] = datetime.now().strftime('%Y-%m-%d %H:%M:%S')
+                        output_rows.append(new_row)
+                        total_contacts += 1
 
-                # Store metadata
-                df.at[idx, 'search_status'] = 'completed'
-                df.at[idx, 'contacts_found'] = len(contacts)
-                df.at[idx, 'last_updated'] = datetime.now().strftime('%Y-%m-%d %H:%M:%S')
-
-                source_urls = [c.source_url for c in contacts if c.source_url]
-                if source_urls:
-                    df.at[idx, 'source_urls'] = '; '.join(source_urls)
+                    print(f"  [FOUND] {len(contacts)} contact(s)")
+                else:
+                    # No contacts found - still add a row to track this university
+                    new_row = row.to_dict()
+                    for col in contact_columns:
+                        new_row[col] = None
+                    new_row['search_status'] = 'no_contacts_found'
+                    new_row['last_updated'] = datetime.now().strftime('%Y-%m-%d %H:%M:%S')
+                    output_rows.append(new_row)
+                    print(f"  [FOUND] 0 contact(s)")
 
                 # Save progress after each university
+                df_output = pd.DataFrame(output_rows)
                 if file_type == 'csv' or output_file.lower().endswith('.csv'):
-                    df.to_csv(output_file, index=False)
+                    df_output.to_csv(output_file, index=False)
                 else:
-                    df.to_excel(output_file, index=False, sheet_name=sheet_name)
+                    df_output.to_excel(output_file, index=False, sheet_name=sheet_name)
                 print(f"  [SAVED] Progress saved to {output_file}")
 
             except Exception as e:
                 print(f"  [ERROR] Error: {str(e)}")
-                df.at[idx, 'search_status'] = f'error: {str(e)}'
-                df.at[idx, 'last_updated'] = datetime.now().strftime('%Y-%m-%d %H:%M:%S')
+                # Add error row
+                new_row = row.to_dict()
+                for col in contact_columns:
+                    new_row[col] = None
+                new_row['search_status'] = f'error: {str(e)}'
+                new_row['last_updated'] = datetime.now().strftime('%Y-%m-%d %H:%M:%S')
+                output_rows.append(new_row)
+
+                # Save progress
+                df_output = pd.DataFrame(output_rows)
                 if file_type == 'csv' or output_file.lower().endswith('.csv'):
-                    df.to_csv(output_file, index=False)
+                    df_output.to_csv(output_file, index=False)
                 else:
-                    df.to_excel(output_file, index=False, sheet_name=sheet_name)
+                    df_output.to_excel(output_file, index=False, sheet_name=sheet_name)
+
+        # Final output
+        df_output = pd.DataFrame(output_rows)
 
         print(f"\n{'='*60}")
         print(f"[COMPLETE] Processing complete!")
+        print(f"  Universities processed: {total}")
+        print(f"  Total contacts found: {total_contacts}")
+        print(f"  Output rows: {len(df_output)}")
         print(f"[SAVED] Results saved to: {output_file}")
         print(f"{'='*60}\n")
 
-        return df
+        return df_output
 
 
 def main():
