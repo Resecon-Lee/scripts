@@ -1,0 +1,26 @@
+{
+  "permissions": {
+    "allow": [
+      "WebFetch(domain:ha.resecon.ai)",
+      "Bash(python:*)",
+      "Bash(dir:*)",
+      "Bash(copy \"university_contact_finder.py\" \".\\\\berkshire\\\\patrick\"\" && copy \"process_universities.py\" \".berkshirepatrick\"\")",
+      "Bash(copy \"quickstart_university_finder.py\" \".\\\\berkshire\\\\patrick\"\" && copy \"merge_ir_contacts.py\" \".berkshirepatrick\"\")",
+      "Bash(copy \"merge_comprehensive_contacts.py\" \".\\\\berkshire\\\\patrick\"\" && copy \"remove_duplicates.py\" \".berkshirepatrick\"\")",
+      "Bash(copy \"requirements_university_finder.txt\" \".\\\\berkshire\\\\patrick\"\" && copy \".env.example\" \".berkshirepatrick\"\")",
+      "Bash(copy \"UNIVERSITY_FINDER_README.md\" \".\\\\berkshire\\\\patrick\"\" && copy \"UNIVERSITY_FINDER_SUMMARY.md\" \".berkshirepatrick\"\")",
+      "Bash(copy \"QUICKSTART.md\" \".\\\\berkshire\\\\patrick\"\" && copy \"PROVIDER_COMPARISON.md\" \".berkshirepatrick\"\")",
+      "Bash(copy \"PROCESSING_YOUR_UNIVERSITIES.md\" \".\\\\berkshire\\\\patrick\"\" && copy \"README_YOUR_FILE.md\" \".berkshirepatrick\"\")",
+      "Bash(copy \"FINAL_DATABASE_SUMMARY.md\" \".\\\\berkshire\\\\patrick\"\")",
+      "Bash(copy \"deploy_to_azure.sh\" \".\\\\berkshire\\\\patrick\"\" && copy \"Deploy-ToAzure.ps1\" \".berkshirepatrick\"\")",
+      "Bash(copy \"run_background.sh\" \".\\\\berkshire\\\\patrick\"\" && copy \"monitor_progress.sh\" \".berkshirepatrick\"\")",
+      "Bash(copy \"check_status.sh\" \".\\\\berkshire\\\\patrick\"\" && copy \"AZURE_DEPLOYMENT_GUIDE.md\" \".berkshirepatrick\"\")",
+      "Bash(copy \"QUICKSTART_AZURE.md\" \".\\\\berkshire\\\\patrick\"\")",
+      "Bash(git init:*)",
+      "Bash(git config:*)",
+      "Bash(git add:*)"
+    ],
+    "deny": [],
+    "ask": []
+  }
+}

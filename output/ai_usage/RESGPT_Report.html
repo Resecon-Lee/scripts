@@ -1,0 +1,712 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>RESGPT Analytics Report</title>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            padding: 20px;
+            color: #333;
+        }
+
+        .container {
+            max-width: 1400px;
+            margin: 0 auto;
+            background: white;
+            border-radius: 20px;
+            box-shadow: 0 20px 60px rgba(0,0,0,0.3);
+            overflow: hidden;
+        }
+
+        .header {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 40px;
+            text-align: center;
+        }
+
+        .header h1 {
+            font-size: 2.5em;
+            margin-bottom: 10px;
+        }
+
+        .header .subtitle {
+            font-size: 1.1em;
+            opacity: 0.9;
+        }
+
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 20px;
+            padding: 40px;
+            background: #f8f9fa;
+        }
+
+        .stat-card {
+            background: white;
+            padding: 25px;
+            border-radius: 15px;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+            transition: transform 0.3s, box-shadow 0.3s;
+        }
+
+        .stat-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 25px rgba(0,0,0,0.15);
+        }
+
+        .stat-card .label {
+            font-size: 0.9em;
+            color: #666;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            margin-bottom: 10px;
+        }
+
+        .stat-card .value {
+            font-size: 2.5em;
+            font-weight: bold;
+            color: #667eea;
+        }
+
+        .stat-card .subvalue {
+            font-size: 0.9em;
+            color: #999;
+            margin-top: 5px;
+        }
+
+        .section {
+            padding: 40px;
+        }
+
+        .section-title {
+            font-size: 1.8em;
+            margin-bottom: 25px;
+            color: #333;
+            border-bottom: 3px solid #667eea;
+            padding-bottom: 10px;
+        }
+
+        .chart-container {
+            position: relative;
+            height: 400px;
+            margin: 30px 0;
+            background: white;
+            padding: 20px;
+            border-radius: 15px;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            background: white;
+            border-radius: 15px;
+            overflow: hidden;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+            margin: 20px 0;
+        }
+
+        th {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 15px;
+            text-align: left;
+            font-weight: 600;
+        }
+
+        td {
+            padding: 12px 15px;
+            border-bottom: 1px solid #f0f0f0;
+        }
+
+        tr:hover {
+            background: #f8f9fa;
+        }
+
+        .model-badge {
+            display: inline-block;
+            padding: 5px 10px;
+            background: #667eea;
+            color: white;
+            border-radius: 15px;
+            font-size: 0.85em;
+            margin: 2px;
+        }
+
+        .kb-card {
+            background: white;
+            padding: 20px;
+            margin: 10px 0;
+            border-radius: 10px;
+            border-left: 4px solid #667eea;
+            box-shadow: 0 3px 10px rgba(0,0,0,0.1);
+        }
+
+        .kb-card h3 {
+            color: #667eea;
+            margin-bottom: 10px;
+        }
+
+        .cost-section {
+            background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);
+            color: white;
+            padding: 30px;
+            border-radius: 15px;
+            margin: 20px 0;
+        }
+
+        .cost-section h3 {
+            margin-bottom: 15px;
+            font-size: 1.5em;
+        }
+
+        .cost-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 15px;
+            margin-top: 20px;
+        }
+
+        .cost-item {
+            background: rgba(255,255,255,0.2);
+            padding: 15px;
+            border-radius: 10px;
+        }
+
+        .cost-item .cost-label {
+            font-size: 0.9em;
+            opacity: 0.9;
+        }
+
+        .cost-item .cost-value {
+            font-size: 1.8em;
+            font-weight: bold;
+            margin-top: 5px;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>RESGPT Analytics Dashboard</h1>
+            <div class="subtitle">Generated on November 16, 2025 at 12:43 AM</div>
+        </div>
+
+        <div class="stats-grid">
+            <div class="stat-card">
+                <div class="label">Total Users</div>
+                <div class="value">38</div>
+                <div class="subvalue">28 active (73.7%)</div>
+            </div>
+
+            <div class="stat-card">
+                <div class="label">Total Chats</div>
+                <div class="value">432</div>
+                <div class="subvalue">15.4 per active user</div>
+            </div>
+
+            <div class="stat-card">
+                <div class="label">Azure Cost (MTD)</div>
+                <div class="value">$694.98</div>
+                <div class="subvalue">Month to date</div>
+            </div>
+
+            <div class="stat-card">
+                <div class="label">Models</div>
+                <div class="value">21</div>
+                <div class="subvalue">9 actively used</div>
+            </div>
+
+            <div class="stat-card">
+                <div class="label">Knowledge Bases</div>
+                <div class="value">13</div>
+                <div class="subvalue">Available resources</div>
+            </div>
+
+            <div class="stat-card">
+                <div class="label">30-Day Forecast</div>
+                <div class="value">$1303.10</div>
+                <div class="subvalue">Projected spend</div>
+            </div>
+
+            <div class="stat-card">
+                <div class="label">Total Messages</div>
+                <div class="value">281</div>
+                <div class="subvalue">0.7 avg per chat</div>
+            </div>
+
+            <div class="stat-card">
+                <div class="label">User Messages</div>
+                <div class="value">141</div>
+                <div class="subvalue">50.2% of total</div>
+            </div>
+
+            <div class="stat-card">
+                <div class="label">AI Responses</div>
+                <div class="value">140</div>
+                <div class="subvalue">Ratio: 1.01:1</div>
+            </div>
+        </div>
+
+        <div class="section">
+            <div class="cost-section">
+                <h3>💰 Azure Cost Breakdown</h3>
+                <div class="cost-grid">
+                    <div class="cost-item">
+                        <div class="cost-label">Total Actual Cost</div>
+                        <div class="cost-value">$694.98</div>
+                    </div>
+                    <div class="cost-item">
+                        <div class="cost-label">Forecast (30d)</div>
+                        <div class="cost-value">$1303.10</div>
+                    </div>
+                    <div class="cost-item">
+                        <div class="cost-label">Daily Average</div>
+                        <div class="cost-value">$43.44</div>
+                    </div>
+                </div>
+
+                <h4 style="margin-top: 25px; margin-bottom: 15px;">Top Services by Cost</h4>
+                <table style="background: rgba(255,255,255,0.95);">
+                    <thead>
+                        <tr>
+                            <th>Service Name</th>
+                            <th>Cost</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr><td>Virtual Machines</td><td>$332.00</td></tr><tr><td>Cognitive Services</td><td>$153.43</td></tr><tr><td>Storage</td><td>$111.26</td></tr><tr><td>Azure Applied AI Services</td><td>$49.66</td></tr><tr><td>Virtual Machine Licenses</td><td>$19.80</td></tr>
+                    </tbody>
+                </table>
+
+                <h4 style="margin-top: 25px; margin-bottom: 15px;">Top Resource Groups by Cost</h4>
+                <table style="background: rgba(255,255,255,0.95);">
+                    <thead>
+                        <tr>
+                            <th>Resource Group</th>
+                            <th>Cost</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        
+                    </tbody>
+                </table>
+            </div>
+        </div>
+
+        <div class="section">
+            <h2 class="section-title">Usage Trends - Last 30 Days</h2>
+            <div class="chart-container">
+                <canvas id="trendsChart"></canvas>
+            </div>
+        </div>
+
+        <div class="section">
+            <h2 class="section-title">Model Distribution</h2>
+            <div class="chart-container">
+                <canvas id="modelChart"></canvas>
+            </div>
+        </div>
+
+        <div class="section">
+            <h2 class="section-title">Top Users by Activity</h2>
+            <table>
+                <thead>
+                    <tr>
+                        <th>Rank</th>
+                        <th>Name</th>
+                        <th>Email</th>
+                        <th>Chats</th>
+                        <th>Messages</th>
+                        <th>Avg Msg/Chat</th>
+                        <th>Primary Models</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    
+                    <tr>
+                        <td>1</td>
+                        <td>Sophia Bouwkamp</td>
+                        <td>sbouwkamp@resecon.com</td>
+                        <td>60</td>
+                        <td>0</td>
+                        <td>0.0</td>
+                        <td><span class="model-badge">unknown</span></td>
+                    </tr>
+                    
+                    <tr>
+                        <td>2</td>
+                        <td>AI admin</td>
+                        <td>admin@resecon.ai</td>
+                        <td>60</td>
+                        <td>281</td>
+                        <td>4.7</td>
+                        <td><span class="model-badge">gpt-4.1</span><span class="model-badge">resecon-general-model</span><span class="model-badge">gpt-5</span></td>
+                    </tr>
+                    
+                    <tr>
+                        <td>3</td>
+                        <td>Dan Kuang</td>
+                        <td>dkuang@resecon.com</td>
+                        <td>60</td>
+                        <td>0</td>
+                        <td>0.0</td>
+                        <td><span class="model-badge">unknown</span></td>
+                    </tr>
+                    
+                    <tr>
+                        <td>4</td>
+                        <td>Lehem Felican</td>
+                        <td>lfelican@resecon.com</td>
+                        <td>35</td>
+                        <td>0</td>
+                        <td>0.0</td>
+                        <td><span class="model-badge">unknown</span></td>
+                    </tr>
+                    
+                    <tr>
+                        <td>5</td>
+                        <td>Eric Gutierrez</td>
+                        <td>egutierrez@resecon.com</td>
+                        <td>34</td>
+                        <td>0</td>
+                        <td>0.0</td>
+                        <td><span class="model-badge">unknown</span></td>
+                    </tr>
+                    
+                    <tr>
+                        <td>6</td>
+                        <td>Grant Danielson</td>
+                        <td>gdanielson@resecon.com</td>
+                        <td>29</td>
+                        <td>0</td>
+                        <td>0.0</td>
+                        <td><span class="model-badge">unknown</span></td>
+                    </tr>
+                    
+                    <tr>
+                        <td>7</td>
+                        <td>Tomas Carrillo</td>
+                        <td>tcarrillo@resecon.com</td>
+                        <td>25</td>
+                        <td>0</td>
+                        <td>0.0</td>
+                        <td><span class="model-badge">unknown</span></td>
+                    </tr>
+                    
+                    <tr>
+                        <td>8</td>
+                        <td>Edward Bierhanzl</td>
+                        <td>ebierhanzl@resecon.com</td>
+                        <td>18</td>
+                        <td>0</td>
+                        <td>0.0</td>
+                        <td><span class="model-badge">unknown</span></td>
+                    </tr>
+                    
+                    <tr>
+                        <td>9</td>
+                        <td>Jonathan Wilson</td>
+                        <td>jwilson@resecon.com</td>
+                        <td>17</td>
+                        <td>0</td>
+                        <td>0.0</td>
+                        <td><span class="model-badge">unknown</span></td>
+                    </tr>
+                    
+                    <tr>
+                        <td>10</td>
+                        <td>Bryzen Morales</td>
+                        <td>bmorales@resecon.com</td>
+                        <td>15</td>
+                        <td>0</td>
+                        <td>0.0</td>
+                        <td><span class="model-badge">unknown</span></td>
+                    </tr>
+                    
+                </tbody>
+            </table>
+        </div>
+
+        <div class="section">
+            <h2 class="section-title">Available Models (21 total)</h2>
+            <table>
+                <thead>
+                    <tr>
+                        <th>Model Name</th>
+                        <th>Model ID</th>
+                        <th>Usage Count</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    
+                    <tr>
+                        <td>Job Classification Model</td>
+                        <td><code>resecon-job-matching-model</code></td>
+                        <td>0</td>
+                    </tr>
+                    
+                    <tr>
+                        <td>Resecon General Model</td>
+                        <td><code>resecon-general-model</code></td>
+                        <td>37</td>
+                    </tr>
+                    
+                    <tr>
+                        <td>FAS Document Analysis</td>
+                        <td><code>resecon-fas-model</code></td>
+                        <td>0</td>
+                    </tr>
+                    
+                    <tr>
+                        <td>Client AI Usage Assistant</td>
+                        <td><code>berkshire-dev---legal--compliance-ai-assistant</code></td>
+                        <td>0</td>
+                    </tr>
+                    
+                    <tr>
+                        <td>Base Model</td>
+                        <td><code>base-model</code></td>
+                        <td>0</td>
+                    </tr>
+                    
+                    <tr>
+                        <td>AA/EEO Requirements - Reasoning</td>
+                        <td><code>berkshire-aaeeo-requirements</code></td>
+                        <td>0</td>
+                    </tr>
+                    
+                    <tr>
+                        <td>Client AI usage - Reasoning</td>
+                        <td><code>ai-compliance-assistant---reasoning</code></td>
+                        <td>0</td>
+                    </tr>
+                    
+                    <tr>
+                        <td>AA/EEO Requirements</td>
+                        <td><code>aaeeo-requirements-assistant</code></td>
+                        <td>0</td>
+                    </tr>
+                    
+                    <tr>
+                        <td>Job Classification - Reasoning</td>
+                        <td><code>job-classification---reasoning</code></td>
+                        <td>0</td>
+                    </tr>
+                    
+                    <tr>
+                        <td>Job Rating- Reasoning</td>
+                        <td><code>job-rating-by-relation</code></td>
+                        <td>0</td>
+                    </tr>
+                    
+                    <tr>
+                        <td>Job Rating - Fast</td>
+                        <td><code>job-rating-by-relation---fast</code></td>
+                        <td>0</td>
+                    </tr>
+                    
+                    <tr>
+                        <td>Labor-Employment-Wage & Hour</td>
+                        <td><code>labor-employment-wage--hour</code></td>
+                        <td>0</td>
+                    </tr>
+                    
+                    <tr>
+                        <td>Document Assistant</td>
+                        <td><code>document-assistant</code></td>
+                        <td>0</td>
+                    </tr>
+                    
+                    <tr>
+                        <td>Resume Ranking</td>
+                        <td><code>resume-ranking</code></td>
+                        <td>0</td>
+                    </tr>
+                    
+                    <tr>
+                        <td>SAS Coding Assistant</td>
+                        <td><code>sas-coding-assistant</code></td>
+                        <td>0</td>
+                    </tr>
+                    
+                    <tr>
+                        <td>CBA Assistant</td>
+                        <td><code>cba-assistant</code></td>
+                        <td>8</td>
+                    </tr>
+                    
+                    <tr>
+                        <td>CBA Assistant (Max)</td>
+                        <td><code>cba-assistant-max</code></td>
+                        <td>0</td>
+                    </tr>
+                    
+                    <tr>
+                        <td>DEv</td>
+                        <td><code>dev</code></td>
+                        <td>1</td>
+                    </tr>
+                    
+                    <tr>
+                        <td>Resecon General Model gpt5</td>
+                        <td><code>resecon-general-model-gpt5</code></td>
+                        <td>2</td>
+                    </tr>
+                    
+                    <tr>
+                        <td>DIDE (Dee~dee)</td>
+                        <td><code>docuinsight-data-engine-plus</code></td>
+                        <td>3</td>
+                    </tr>
+                    
+                </tbody>
+            </table>
+            <p style="text-align: center; color: #666; margin-top: 20px;">... and 1 more models</p>
+        </div>
+
+        <div class="section">
+            <h2 class="section-title">Knowledge Bases (13 total)</h2>
+            
+            <div class="kb-card">
+                <h3>TEST 3</h3>
+                <p><strong>ID:</strong> 76218a5d-4c5c-4021-a187-8626a5ce51b5</p>
+            </div>
+            
+            <div class="kb-card">
+                <h3>Test</h3>
+                <p><strong>ID:</strong> 57bb02d7-d668-43ed-9681-208bf46f515e</p>
+            </div>
+            
+            <div class="kb-card">
+                <h3>test  2</h3>
+                <p><strong>ID:</strong> 8b44077d-bee0-4da5-941e-63cda80168d9</p>
+            </div>
+            
+            <div class="kb-card">
+                <h3>Seattle CBA Produced 1.1</h3>
+                <p><strong>ID:</strong> 31e6fb3f-d9e1-4099-8dda-80495a14228d</p>
+            </div>
+            
+            <div class="kb-card">
+                <h3>Seattle CBA Originals deDuped</h3>
+                <p><strong>ID:</strong> 37a10135-c9f4-4b57-b09b-7ff3e043b4aa</p>
+            </div>
+            
+            <div class="kb-card">
+                <h3>AI Weekly Status Reports</h3>
+                <p><strong>ID:</strong> aac72296-2c3b-48ef-bc03-dea39bce8db8</p>
+            </div>
+            
+            <div class="kb-card">
+                <h3>Seattle CBA Originals 1.1</h3>
+                <p><strong>ID:</strong> f1df57e2-6241-46a7-b965-f770f8307844</p>
+            </div>
+            
+            <div class="kb-card">
+                <h3>Resume Ranking</h3>
+                <p><strong>ID:</strong> da6903ee-a475-4ac5-ac8e-4011398a67d8</p>
+            </div>
+            
+            <div class="kb-card">
+                <h3>SAS</h3>
+                <p><strong>ID:</strong> d153930a-952d-41a3-8edd-9e0be61f2078</p>
+            </div>
+            
+            <div class="kb-card">
+                <h3>SAS Code Snippets</h3>
+                <p><strong>ID:</strong> 420ca596-0462-4994-84a2-2a241bd6f16c</p>
+            </div>
+            
+            <div class="kb-card">
+                <h3>AI Acceptance Policy</h3>
+                <p><strong>ID:</strong> 4c8c1d09-7507-42bf-821e-43ff65571bd1</p>
+            </div>
+            
+            <div class="kb-card">
+                <h3>Edward</h3>
+                <p><strong>ID:</strong> 1b5690a6-7f96-4a5b-8642-80cfd706d338</p>
+            </div>
+            
+            <div class="kb-card">
+                <h3>Berkshire Contracts & Agreements - Accounts</h3>
+                <p><strong>ID:</strong> 323b21e7-70dc-4498-98eb-7ba8bb2ebbd9</p>
+            </div>
+            
+            
+        </div>
+    </div>
+
+    <script>
+        // Trends Chart
+        const trendsCtx = document.getElementById('trendsChart').getContext('2d');
+        new Chart(trendsCtx, {
+            type: 'line',
+            data: {
+                labels: ["2025-10-05", "2025-10-06", "2025-10-07", "2025-10-08", "2025-10-09", "2025-10-10", "2025-10-13", "2025-10-15", "2025-10-17", "2025-10-18", "2025-10-19", "2025-10-21", "2025-10-22", "2025-10-23", "2025-10-24", "2025-10-27", "2025-10-29", "2025-10-30", "2025-11-03", "2025-11-04", "2025-11-05", "2025-11-06", "2025-11-07", "2025-11-08", "2025-11-09", "2025-11-10", "2025-11-11", "2025-11-12", "2025-11-13", "2025-11-15"],
+                datasets: [{
+                    label: 'Daily Chats',
+                    data: [1, 6, 10, 4, 4, 3, 6, 5, 1, 2, 1, 7, 4, 4, 12, 1, 1, 4, 7, 4, 7, 3, 2, 1, 4, 8, 17, 14, 6, 11],
+                    borderColor: '#667eea',
+                    backgroundColor: 'rgba(102, 126, 234, 0.1)',
+                    tension: 0.4,
+                    fill: true
+                }]
+            },
+            options: {
+                responsive: true,
+                maintainAspectRatio: false,
+                plugins: {
+                    legend: {
+                        display: true,
+                        position: 'top'
+                    }
+                },
+                scales: {
+                    y: {
+                        beginAtZero: true
+                    }
+                }
+            }
+        });
+
+        // Model Distribution Chart
+        const modelCtx = document.getElementById('modelChart').getContext('2d');
+        new Chart(modelCtx, {
+            type: 'doughnut',
+            data: {
+                labels: ["unknown", "gpt-4.1", "resecon-general-model", "gpt-5", "docuinsight-data-engine-plus", "gpt-4o", "resecon-general-model-gpt5", "dev", "cba-assistant"],
+                datasets: [{
+                    data: [372, 8, 37, 1, 3, 1, 2, 1, 8],
+                    backgroundColor: [
+                        '#667eea', '#764ba2', '#f093fb', '#4facfe',
+                        '#43e97b', '#fa709a', '#fee140', '#30cfd0',
+                        '#a8edea', '#fed6e3'
+                    ]
+                }]
+            },
+            options: {
+                responsive: true,
+                maintainAspectRatio: false,
+                plugins: {
+                    legend: {
+                        position: 'right'
+                    }
+                }
+            }
+        });
+    </script>
+</body>
+</html>

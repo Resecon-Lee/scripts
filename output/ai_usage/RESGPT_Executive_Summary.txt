@@ -1,0 +1,22 @@
+======================================================================
+RESGPT EXECUTIVE SUMMARY
+======================================================================
+
+Report Date: November 14, 2025
+
+Total Users: 38
+Active Users: 28 (73.7%)
+Total Chats: 428
+
+TOP 10 USERS BY ACTIVITY
+----------------------------------------------------------------------
+ 1. AI admin                       -  60 chats - Very Active
+ 2. Dan Kuang                      -  60 chats - Very Active
+ 3. Sophia Bouwkamp                -  59 chats - Very Active
+ 4. Lehem Felican                  -  35 chats - Inactive
+ 5. Eric Gutierrez                 -  34 chats - Active
+ 6. Grant Danielson                -  26 chats - Very Active
+ 7. Tomas Carrillo                 -  25 chats - Moderate
+ 8. Edward Bierhanzl               -  18 chats - Very Active
+ 9. Jonathan Wilson                -  17 chats - Very Active
+10. Bryzen Morales                 -  15 chats - Active

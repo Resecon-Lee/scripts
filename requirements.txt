@@ -1,0 +1,10 @@
+# OpenWebUI Sync Requirements
+
+# Core dependencies
+requests>=2.31.0        # HTTP library for API calls
+schedule>=1.2.0         # Job scheduling for automated syncs
+
+# Optional dependencies (for future enhancements)
+# pandas>=2.0.0         # Data analysis (for advanced reporting)
+# matplotlib>=3.7.0     # Charting (for visualizations)
+# plotly>=5.14.0        # Interactive charts

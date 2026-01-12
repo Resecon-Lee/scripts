@@ -1,0 +1,406 @@
+============================================================
+FASGPT Detailed Topic Analysis
+============================================================
+
+Total chats analyzed: 342
+Unique chat titles: 342
+
+============================================================
+Top 50 Topics:
+============================================================
+ 1. analysis                  -  38 mentions
+ 2. financial                 -  24 mentions
+ 3. overview                  -  23 mentions
+ 4. summary                   -  22 mentions
+ 5. deposition                -  19 mentions
+ 6. employment                -  18 mentions
+ 7. review                    -  14 mentions
+ 8. report                    -  13 mentions
+ 9. excel                     -  13 mentions
+10. economic                  -  11 mentions
+11. damages                   -  11 mentions
+12. expert                    -  11 mentions
+13. statistics                -  10 mentions
+14. dispute                   -   9 mentions
+15. valuation                 -   9 mentions
+16. explained                 -   9 mentions
+17. revenue                   -   9 mentions
+18. request                   -   8 mentions
+19. guide                     -   8 mentions
+20. advisory                  -   8 mentions
+21. hotel                     -   8 mentions
+22. cannabis                  -   8 mentions
+23. compliance                -   7 mentions
+24. projections               -   7 mentions
+25. legal                     -   7 mentions
+26. regional                  -   6 mentions
+27. occupational              -   6 mentions
+28. insights                  -   6 mentions
+29. business                  -   6 mentions
+30. document                  -   6 mentions
+31. industry                  -   6 mentions
+32. citation                  -   6 mentions
+33. guidance                  -   6 mentions
+34. sales                     -   6 mentions
+35. assistance                -   5 mentions
+36. economics                 -   5 mentions
+37. stock                     -   5 mentions
+38. market                    -   5 mentions
+39. forensic                  -   5 mentions
+40. accounting                -   5 mentions
+41. policy                    -   5 mentions
+42. audit                     -   5 mentions
+43. litigation                -   5 mentions
+44. executive                 -   4 mentions
+45. tesla                     -   4 mentions
+46. update                    -   4 mentions
+47. house                     -   4 mentions
+48. contract                  -   4 mentions
+49. remedies                  -   4 mentions
+50. amazon                    -   4 mentions
+
+============================================================
+All Chat Titles:
+============================================================
+   1. 💰 salary distribution analysis
+   2. 💼 salary and tenure analysis
+   3. 👥 employee count overview
+   4. 🌎 vcpu usage analysis
+   5. 📁 file analysis assistance
+   6. 📊 regional file analysis
+   7. 📊 regional data request
+   8. 📊 regional stats request
+   9. 📊 regional statistics request
+  10. 💼 employment and wage data
+  11. 💵 wage and hour statistics
+  12. 💼 top executive median wages
+  13. 👔 occupational wage statistics
+  14. 💼 occupational wage statistics
+  15. 📊 employment & wage insights
+  16. 📊 employment & wage report
+  17. 📊 employment & wage analysis
+  18. 📊 employment & wage analysis
+  19. 💼 employment and wage data
+  20. 💼 employment & wage statistics
+  21. 👔 occupational wage statistics report
+  22. 💼 occupational wage analysis
+  23. 💼 employment and wage analysis
+  24. 💼 employment & wage report
+  25. 💼 occupational wage statistics report
+  26. 💼 employment & wage statistics
+  27. 💼 employment & wage overview
+  28. 💼 occupational wage statistics report
+  29. 💼 employment & wage data
+  30. 💼 employment & wage statistics
+  31. 📊 applicant data file insights
+  32. 📧 employee email directory
+  33. clone of 📊 economic loss excel guide
+  34. 🤖 ai consulting product showcase
+  35. 🤖 ai tools showcase
+  36. 💼 employment data analytics guide
+  37. 👥 resolution economics team directory
+  38. 🚗 uber 2024 financial report
+  39. 💼 employment economics q&a
+  40. 👔 professional team directory
+  41. 🕒 time card overview
+  42. new chat
+  43. 🚗 uber 2024 financial review
+  44. 🚗 tesla stock trend
+  45. 🎮 resy blaster game update
+  46. resy blaster 2 development 🎮
+  47. 📈 tesla stock analysis
+  48. 🏠 house price regression
+  49. 🏠 house data analysis
+  50. 💼 financial compliance assistance
+  51. 📊 resolution economics overview
+  52. 📈 tesla stock trend report
+  53. 🏠 house data analysis
+  54. 🏠 house price data analysis
+  55. ⏱️ timecard entry overview
+  56. 🕹️ running html game file
+  57. 🕹️ retro arcade game review
+  58. 🎮 master blaster game fix
+  59. 📊 us indices snapshot
+  60. 📈 us stock market snapshot
+  61. 💼 employment damages analysis
+  62. 💼 economic damages overview
+  63. 🏥 healthcare contract dispute
+  64. 👩‍💼 hr executive profile
+  65. 📊 company balance sheet data
+  66. 💼 employment case mitigation
+  67. 📈 cpi category selection guide
+  68. 📊 life care plan excel
+  69. 🕵️‍♂️ forensic accounting interview prep
+  70. ⚖️ economic damages deposition
+  71. 👨‍🏫 teacher employment status
+  72. 💼 expert trial q&a prep
+  73. 🏷️ business valuation basics
+  74. 💰 solvency analysis basics
+  75. 🧑‍💼 franco post-njsp jobs
+  76. 📝 expert deposition summary
+  77. 📚 martin elliott teaching locations
+  78. 💼 expert deposition summary
+  79. 🧑‍⚖️ expert witness cross-examination
+  80. 📚 economic remedies citations
+  81. 💼 eisneramper damages analysis
+  82. 🕵️‍♂️ damages report critique
+  83. 📝 vl policy overview
+  84. 🏠 home warranty ethics
+  85. 📊 top consumer complaints
+  86. 🚨 workplace discrimination case
+  87. ⚖️ deposition question strategies
+  88. 📊 financial statement overview
+  89. 🔍 ey audit malpractice analysis document analysis
+  90. 🔍 auditor liability analysis general model
+  91. 📊 excel date range average
+  92. ⏱️ excel time calculations
+  93. 🗂 microsoft folder structure
+  94. 📝 microsoft word assistance
+  95. 📊 excel text extraction
+  96. 🛢️ optimal oil futures timing
+  97. 🛢️ crude oil trading hours
+  98. 🔍 duplicate data detection
+  99. 📊 excel text extraction tip
+ 100. 🕵️‍♂️ financial advisory ai comparison
+ 101. 📊 excel drop-down guide
+ 102. 🟦 excel conditional output
+ 103. 🧮 excel text manipulation
+ 104. 🚗 road damage cost analysis
+ 105. 💼 financial advisory insights
+ 106. 📊 annual user count method
+ 107. 📅 latest financial estimates
+ 108. 📝 remove excel hyperlinks
+ 109. 📊 us amazon user estimates
+ 110. 📊 amazon prime member data
+ 111. 📈 amazon prime growth
+ 112. 📊 amazon user metrics
+ 113. 🏢 prorated commercial rent guide
+ 114. 💬 fun question exchange
+ 115. 🏠 texas rent late fees
+ 116. 📊 excel text extraction
+ 117. 🏢 lease types comparison
+ 118. 🔎 press release keyword search
+ 119. 🔄 excel page order settings
+ 120. new chat
+ 121. 📁 document upload limitations
+ 122. 📁 document access limitations
+ 123. 📅 cascading schedule example
+ 124. 🏛️ structural remedies explained
+ 125. 💼 financial advisory capabilities
+ 126. 🔎 forensic accounting questions
+ 127. 📊 engagement economics training
+ 128. 🤝 reconnecting with colleague
+ 129. 📝 court case summary request
+ 130. 🧮 weighted average calculation
+ 131. 💰 bank reconciliation process
+ 132. 🕵️‍♂️ fnbc audit leadership insights
+ 133. 💼 compensation benchmark analysis
+ 134. 🚗 vehicle collision edit
+ 135. 📊 sg&a breakdown overview
+ 136. 🏦 fund vs investor clarification
+ 137. 📝 table footnote review
+ 138. 🌍 global asset management trends
+ 139. 🏨 hotel industry analysis
+ 140. 📊 discounting revenue methods
+ 141. 📑 sec compliance for funds
+ 142. 💰 reasonable royalty factors
+ 143. 📈 optimistic revenue projections
+ 144. 📚 simple interest definition
+ 145. 🔒 data security program summary
+ 146. 🚗 showroom expansion impact
+ 147. 💰 liquidated damages overview
+ 148. 📚 treatises in legal support
+ 149. 📚 legal case reference
+ 150. 🔄 subsidiary control provisions
+ 151. 📚 legal citation guidance
+ 152. 🚗 lease dispute deposition
+ 153. 📑 deposition summary insights
+ 154. 📝 deposition summary review
+ 155. 💰 market capitalization explained
+ 156. 📈 optimistic market sale
+ 157. ⚡ ev charging bankruptcies
+ 158. ⚡ ev charging industry trends
+ 159. ⚡ tritium ev insolvency
+ 160. 🔌 ev industry profitability challenges
+ 161. 💼 salary vs bonus explained
+ 162. 📊 valuation expert cross-exam
+ 163. 💼 valuation expert cross-examination
+ 164. 🚗 auto dealership projections
+ 165. 📑 deposition financial summary
+ 166. 📑 deposition summary review
+ 167. new chat
+ 168. 📑 deposition summary highlights
+ 169. 📝 deposition summary analysis
+ 170. 📑 deposition summary review
+ 171. 📝 deposition summary & issues
+ 172. 💼 executive compensation dispute
+ 173. 💼 executive compensation dispute
+ 174. 💼 economic remedies overview
+ 175. ⚖️ legal claims overview
+ 176. 💼 economic remedies overview
+ 177. ⚖️ contract and wage claims
+ 178. 💰 economic damages objective
+ 179. 💰 economic damages objective
+ 180. ⚖️ disgorgement damages citation
+ 181. 📉 business value diminishment
+ 182. 🕵️‍♂️ financial advisory questions
+ 183. 💼 management fee explanation
+ 184. 💳 payment descriptions summary
+ 185. 📊 data analysis queries
+ 186. 📊 dso financial metric analysis
+ 187. 📊 powerpoint financial analysis
+ 188. 📊 sales dashboard overview
+ 189. 🏨 hotel tax audit automation
+ 190. 📊 uber financial metrics review
+ 191. 📊 sales dashboard walkthrough
+ 192. 📊 sales client performance dashboard
+ 193. 📧 fasgpt approval process update
+ 194. 📊 power bi user guide review
+ 195. 📊 sales dashboard walkthrough
+ 196. 🔍 forensic accounting tasks
+ 197. 🔍 forensic accounting proposal review
+ 198. 🕵️ forensic accounting expertise
+ 199. ✉️ email review request
+ 200. 🚖 uber risk metrics
+ 201. 🏆 data visualization competition recap
+ 202. 💼 corporate fraud investigation
+ 203. 🚨 uber risk management
+ 204. 💼 resolution economics overview
+ 205. 🔍 fraud detection challenges
+ 206. 📊 financial data input flow
+ 207. 💼 depreciation vs asset value
+ 208. 📝 fnbc audit deposition summary
+ 209. 📄 deposition exhibit summaries
+ 210. 💼 financial advisory overview
+ 211. 💼 expert deposition rebuttal
+ 212. 🔍 expert report rebuttal
+ 213. 🤝 contract compliance services
+ 214. 🌎 life sciences sanctions tariffs
+ 215. 🌱 mold impact revenue delay
+ 216. 🚀 policy project kick-off
+ 217. 🏥 hospital settlement claim summary
+ 218. clone of new chat
+ 219. 📊 audited vs unaudited financials
+ 220. 📊 internal budgeting purposes
+ 221. 📊 arbor data sharing issues
+ 222. 📊 financial projections explained
+ 223. 📊 internal vs. external projections
+ 224. han lee career overview 🧑‍💼
+ 225. 📝 complaint analysis summary
+ 226. 🚗 vehicle title liability explained
+ 227. 🕵️‍♂️ gryphon strategies overview
+ 228. 📊 economic consulting trends
+ 229. 🔒 kovel letter explained
+ 230. 🤖 ai fraud detection
+ 231. ⛳ golf club rental policy
+ 232. 📄 document production update
+ 233. 🧑‍⚖️ expert agreement matrix
+ 234. 💼 lost profits calculation draft
+ 235. 🏨 hotel litigation analysis
+ 236. 💼 ocp financial damages methodology
+ 237. 🔋 renewable energy valuations
+ 238. 💸 fair market value explained
+ 239. 📄 rule 26 expert disclosure
+ 240. 📦 forecasting & channel mix
+ 241. 📊 statistical model explanation
+ 242. 🏢 going concern valuation
+ 243. ⚖️ wind project legal dispute
+ 244. 📄 key litigation documents overview
+ 245. 🧬 fda biosimilar guidance update
+ 246. ⚖️ lodestar fee analysis response
+ 247. 🩺 nephrology pharma compliance
+ 248. 💼 investment banking fees explained
+ 249. 🩺 nephrology market access policy
+ 250. 🤖 ai bias policy analysis
+ 251. 🛡️ defamation & regulatory risk
+ 252. 💡 patent value tax debate
+ 253. 💼 investment banking revenue insights
+ 254. 😠 meaning of grrr
+ 255. 🌍 regional data summary
+ 256. 🌍 regional data analysis
+ 257. 📈 tesla stock price report
+ 258. 👋 welcome to resy assistance
+ 259. 📅 power query date logic
+ 260. 📊 business valuation rfp overview
+ 261. 📊 business valuation summaries
+ 262. 📊 business valuation proposal
+ 263. 🏥 college valuation proposal
+ 264. 📊 financial statement overview
+ 265. 📄 rfp clarification questions
+ 266. 🚗 wrongful death lawsuit
+ 267. 📄 economic development proposal
+ 268. 📄 rfp search guidance
+ 269. 📁 file upload assistance
+ 270. 🔍 fas industry coverage
+ 271. 🌐 internet data spreadsheet
+ 272. 💼 financial advisory capabilities
+ 273. 📧 email comparison analysis
+ 274. 💸 party payment breakdown
+ 275. 📉 ev charging industry decline
+ 276. 📅 gf media project timeline
+ 277. 💵 personal expense calculations
+ 278. 💸 wire transfer details
+ 279. new chat
+ 280. 💼 chase account csv export
+ 281. 📊 exemption repository guide
+ 282. 📊 bank statement excel export
+ 283. 🏨 automated tax filing guide
+ 284. 📊 gl revenue entry help
+ 285. 📋 loan amortization schedule
+ 286. clone of 🏨 hotel tax audit automation
+ 287. 💻 vba for fas models
+ 288. 🤝 subway partnership distribution dispute
+ 289. 📝 rfp experience memo draft
+ 290. 👔 financial advisory introduction
+ 291. 💼 financial advisory overview
+ 292. 📑 contract breach summary
+ 293. 📊 gaap compliance review
+ 294. 📊 cannabis industry guidance trends
+ 295. 🔎 pitchbook search process
+ 296. 📝 legal citation guidance
+ 297. 💼 hotel fee provisions review
+ 298. 📦 product listing review
+ 299. 📝 allegations summary table
+ 300. 🏨 hotel financial data request
+ 301. 🏨 hotel ownership dispute ruling
+ 302. 🥩 beef product categories explained
+ 303. 📄 beaton report document request
+ 304. 🧮 m&a report critique
+ 305. 🧑‍⚖️ deposition testimony review
+ 306. 🗂 data parsing error fix
+ 307. 🏨 hotel ownership dispute
+ 308. 📋 litigation prep task list
+ 309. 🔗 citation format guidance
+ 310. 💊 pharmacy benefit managers overview
+ 311. 💊 pharma drug commercialization
+ 312. 🔗 webpage citation formatting
+ 313. 📄 financial projections dispute
+ 314. 🌿 mold issue delays revenue
+ 315. 🌿 mold impact on revenue
+ 316. 📈 state expansion tracking
+ 317. 📑 m&a compliance citations
+ 318. 📊 massachusetts sales decline
+ 319. 💼 economic damages analysis
+ 320. 🏢 holistic counterclaim summary
+ 321. 🧑‍💼 consultant interview questions
+ 322. 📝 legal strategy call recap
+ 323. 💼 deposition topic summaries
+ 324. 📊 management projections evidence
+ 325. 📊 cannabis company earnings
+ 326. 📑 client document request follow-up
+ 327. 📑 client valuation engagement
+ 328. 🌿 cannabis sales projections analysis
+ 329. 💼 securities & crypto litigation
+ 330. 📊 cresco labs financial forecasts
+ 331. 📝 deposition citation analysis
+ 332. 💼 merger fraud allegations
+ 333. 🌿 cannabis wage compliance analysis
+ 334. 🌿 cannabis revenue miss analysis
+ 335. 📊 holistic revenue adjustment summary
+ 336. 📊 holistic industries projection adjustments
+ 337. crypto ponzi scheme analysis 💸
+ 338. 🚬 cannabis business litigation summary
+ 339. 🌿 cannabis tax structuring
+ 340. 💸 280e cannabis tax expense
+ 341. 🚪 testimony on transaction termination
+ 342. 📝 expert report drafting

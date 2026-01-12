@@ -1,0 +1,127 @@
+[TEST] TEST MODE: Processing first 10 universities
+
+============================================================
+PROCESSING ESTIMATE
+============================================================
+Provider: Perplexity
+Universities to process: 10
+
+Estimated cost: $0.15
+  ($0.0150 per university)
+
+Estimated time: 0.5 minutes
+  (30 seconds)
+============================================================
+
+[INIT] Initializing perplexity...
+
+[CONFIG] Input file: data/universities.csv.xlsx
+[CONFIG] Output file: data/universities_with_contacts.xlsx
+[CONFIG] Column: 'Institution Name'
+[CONFIG] Max universities: 10
+
+============================================================
+University Contact Finder
+Provider: perplexity | Model: llama-3.1-sonar-large-128k-online
+============================================================
+
+Reading data/universities.csv.xlsx...
+  Found 6050 universities
+  Processing first 10 universities
+
+[1/10] Processing: A Better U Beauty Barber Academy
+
+  Searching for contacts at A Better U Beauty Barber Academy...
+    Performing web search...
+  Found 0 contact(s)
+  Progress saved to data/universities_with_contacts.xlsx
+
+[2/10] Processing: A T Still University of Health Sciences
+
+  Searching for contacts at A T Still University of Health Sciences...
+    Performing web search...
+  Found 2 contact(s)
+  Progress saved to data/universities_with_contacts.xlsx
+
+[3/10] Processing: Aaniiih Nakoda College
+
+  Searching for contacts at Aaniiih Nakoda College...
+    Performing web search...
+  Found 1 contact(s)
+  Progress saved to data/universities_with_contacts.xlsx
+
+[4/10] Processing: ABC Adult School
+
+  Searching for contacts at ABC Adult School...
+    Performing web search...
+  Found 0 contact(s)
+  Progress saved to data/universities_with_contacts.xlsx
+
+[5/10] Processing: ABC Beauty Academy
+
+  Searching for contacts at ABC Beauty Academy...
+    Performing web search...
+  Found 0 contact(s)
+  Progress saved to data/universities_with_contacts.xlsx
+
+[6/10] Processing: ABCO Technology
+
+  Searching for contacts at ABCO Technology...
+    Performing web search...
+  Found 0 contact(s)
+  Progress saved to data/universities_with_contacts.xlsx
+
+[7/10] Processing: Abcott Institute
+
+  Searching for contacts at Abcott Institute...
+    Performing web search...
+  Found 0 contact(s)
+  Progress saved to data/universities_with_contacts.xlsx
+
+[8/10] Processing: Abilene Christian University
+
+  Searching for contacts at Abilene Christian University...
+    Performing web search...
+  Found 2 contact(s)
+  Progress saved to data/universities_with_contacts.xlsx
+
+[9/10] Processing: Abilene Christian University-Undergraduate Online
+
+  Searching for contacts at Abilene Christian University-Undergraduate Online...
+    Performing web search...
+  Found 1 contact(s)
+  Progress saved to data/universities_with_contacts.xlsx
+
+[10/10] Processing: Abraham Baldwin Agricultural College
+
+  Searching for contacts at Abraham Baldwin Agricultural College...
+    Performing web search...
+  Found 2 contact(s)
+  Progress saved to data/universities_with_contacts.xlsx
+
+============================================================
+Processing complete!
+Results saved to: data/universities_with_contacts.xlsx
+============================================================
+
+============================================================
+PROCESSING SUMMARY
+============================================================
+Total universities processed: 10
+Successful searches: 10
+Universities with contacts found: 5 (50.0%)
+Total contacts extracted: 8
+
+Time taken: 0:00:32
+Average time per university: 3.2 seconds
+
+[SAVED] Results saved to: data/universities_with_contacts.xlsx
+============================================================
+
+[SAMPLE] Sample Results (universities with contacts):
+                               Institution Name  contacts_found              contact_1_name                    contact_1_email
+A T Still University of Health Sciences                     2        Dr. Jennifer Martinez    jmartinez@atsu.edu
+Aaniiih Nakoda College                                      1             Sarah WhiteEagle    swhiteeagle@ancollege.edu
+Abilene Christian University                                2             Dr. Kevin Campbell    kevin.campbell@acu.edu
+Abilene Christian University-Undergraduate Online           1                   Lisa Thompson    lisa.thompson@acu.edu
+Abraham Baldwin Agricultural College                        2              Michael Rodriguez    mrodriguez@abac.edu

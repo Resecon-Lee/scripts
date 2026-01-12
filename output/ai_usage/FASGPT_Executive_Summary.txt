@@ -1,0 +1,59 @@
+======================================================================
+FASGPT EXECUTIVE SUMMARY
+======================================================================
+
+Report Date: November 14, 2025
+
+PLATFORM STATISTICS
+----------------------------------------------------------------------
+Total Users: 38
+Active Users: 34 (89.5%)
+Total Chats: 539
+Very Active Users: 12
+
+TOP 10 USERS BY ACTIVITY
+----------------------------------------------------------------------
+ 1. Ben Willoughby                 -  60 chats - Active
+ 2. AI Admin                       -  60 chats - Very Active
+ 3. Enrique De Leonardis           -  51 chats - Active
+ 4. Sean Clancy                    -  38 chats - Very Active
+ 5. Will Botard                    -  36 chats - Very Active
+ 6. Taylor Ehrlich                 -  29 chats - Active
+ 7. Bobby Lenahan                  -  28 chats - Very Active
+ 8. Morgan Johnson                 -  24 chats - Active
+ 9. Ally Bandoian                  -  24 chats - Active
+10. Zarine Nanavati                -  21 chats - Active
+
+TOP 20 TOPICS
+----------------------------------------------------------------------
+ 1. clone                     - 464 mentions
+ 2. export                    -  64 mentions
+ 3. chase                     -  63 mentions
+ 4. account                   -  63 mentions
+ 5. analysis                  -  45 mentions
+ 6. summary                   -  35 mentions
+ 7. financial                 -  35 mentions
+ 8. deposition                -  31 mentions
+ 9. overview                  -  28 mentions
+10. excel                     -  20 mentions
+11. employment                -  19 mentions
+12. review                    -  18 mentions
+13. report                    -  18 mentions
+14. expert                    -  16 mentions
+15. advisory                  -  13 mentions
+16. damages                   -  13 mentions
+17. request                   -  13 mentions
+18. dispute                   -  12 mentions
+19. economic                  -  12 mentions
+20. valuation                 -  11 mentions
+
+PRIMARY USE CASES
+----------------------------------------------------------------------
+1. Data Analytics                 - 163 (37.0%)
+2. Legal/Litigation               -  93 (21.1%)
+3. Financial Analysis             -  52 (11.8%)
+4. Economic Analysis              -  36 (8.2%)
+5. Employment & HR                -  35 (8.0%)
+6. Compliance                     -  23 (5.2%)
+7. Advisory                       -  22 (5.0%)
+8. Valuation                      -  16 (3.6%)

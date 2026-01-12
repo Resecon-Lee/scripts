@@ -1,0 +1,31 @@
+# Environment and secrets
+.env
+*.pem
+*.key
+
+# Python
+__pycache__/
+*.pyc
+*.pyo
+.pytest_cache/
+
+# Data files (may contain sensitive info)
+*.db
+data/
+
+# IDE and editor
+.vscode/
+.idea/
+
+# Temp files
+tmp*/
+tmpclaude-*
+nul
+*.tmp
+
+# Large token files
+*_tokens.txt
+
+# Azure local settings
+azure/.env
+azure/.claude/

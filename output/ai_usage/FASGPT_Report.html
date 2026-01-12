@@ -1,0 +1,729 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>FASGPT Analytics Report</title>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            padding: 20px;
+            color: #333;
+        }
+
+        .container {
+            max-width: 1400px;
+            margin: 0 auto;
+            background: white;
+            border-radius: 20px;
+            box-shadow: 0 20px 60px rgba(0,0,0,0.3);
+            overflow: hidden;
+        }
+
+        .header {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 40px;
+            text-align: center;
+        }
+
+        .header h1 {
+            font-size: 2.5em;
+            margin-bottom: 10px;
+        }
+
+        .header .subtitle {
+            font-size: 1.1em;
+            opacity: 0.9;
+        }
+
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 20px;
+            padding: 40px;
+            background: #f8f9fa;
+        }
+
+        .stat-card {
+            background: white;
+            padding: 25px;
+            border-radius: 15px;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+            transition: transform 0.3s, box-shadow 0.3s;
+        }
+
+        .stat-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 25px rgba(0,0,0,0.15);
+        }
+
+        .stat-card .label {
+            font-size: 0.9em;
+            color: #666;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            margin-bottom: 10px;
+        }
+
+        .stat-card .value {
+            font-size: 2.5em;
+            font-weight: bold;
+            color: #667eea;
+        }
+
+        .stat-card .subvalue {
+            font-size: 0.9em;
+            color: #999;
+            margin-top: 5px;
+        }
+
+        .section {
+            padding: 40px;
+        }
+
+        .section-title {
+            font-size: 1.8em;
+            margin-bottom: 25px;
+            color: #333;
+            border-bottom: 3px solid #667eea;
+            padding-bottom: 10px;
+        }
+
+        .chart-container {
+            position: relative;
+            height: 400px;
+            margin: 30px 0;
+            background: white;
+            padding: 20px;
+            border-radius: 15px;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            background: white;
+            border-radius: 15px;
+            overflow: hidden;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+            margin: 20px 0;
+        }
+
+        th {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 15px;
+            text-align: left;
+            font-weight: 600;
+        }
+
+        td {
+            padding: 12px 15px;
+            border-bottom: 1px solid #f0f0f0;
+        }
+
+        tr:hover {
+            background: #f8f9fa;
+        }
+
+        .model-badge {
+            display: inline-block;
+            padding: 5px 10px;
+            background: #667eea;
+            color: white;
+            border-radius: 15px;
+            font-size: 0.85em;
+            margin: 2px;
+        }
+
+        .kb-card {
+            background: white;
+            padding: 20px;
+            margin: 10px 0;
+            border-radius: 10px;
+            border-left: 4px solid #667eea;
+            box-shadow: 0 3px 10px rgba(0,0,0,0.1);
+        }
+
+        .kb-card h3 {
+            color: #667eea;
+            margin-bottom: 10px;
+        }
+
+        .cost-section {
+            background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);
+            color: white;
+            padding: 30px;
+            border-radius: 15px;
+            margin: 20px 0;
+        }
+
+        .cost-section h3 {
+            margin-bottom: 15px;
+            font-size: 1.5em;
+        }
+
+        .cost-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 15px;
+            margin-top: 20px;
+        }
+
+        .cost-item {
+            background: rgba(255,255,255,0.2);
+            padding: 15px;
+            border-radius: 10px;
+        }
+
+        .cost-item .cost-label {
+            font-size: 0.9em;
+            opacity: 0.9;
+        }
+
+        .cost-item .cost-value {
+            font-size: 1.8em;
+            font-weight: bold;
+            margin-top: 5px;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>FASGPT Analytics Dashboard</h1>
+            <div class="subtitle">Generated on November 16, 2025 at 12:41 AM</div>
+        </div>
+
+        <div class="stats-grid">
+            <div class="stat-card">
+                <div class="label">Total Users</div>
+                <div class="value">38</div>
+                <div class="subvalue">34 active (89.5%)</div>
+            </div>
+
+            <div class="stat-card">
+                <div class="label">Total Chats</div>
+                <div class="value">542</div>
+                <div class="subvalue">15.9 per active user</div>
+            </div>
+
+            <div class="stat-card">
+                <div class="label">Azure Cost (MTD)</div>
+                <div class="value">$694.98</div>
+                <div class="subvalue">Month to date</div>
+            </div>
+
+            <div class="stat-card">
+                <div class="label">Models</div>
+                <div class="value">17</div>
+                <div class="subvalue">7 actively used</div>
+            </div>
+
+            <div class="stat-card">
+                <div class="label">Knowledge Bases</div>
+                <div class="value">45</div>
+                <div class="subvalue">Available resources</div>
+            </div>
+
+            <div class="stat-card">
+                <div class="label">30-Day Forecast</div>
+                <div class="value">$1303.10</div>
+                <div class="subvalue">Projected spend</div>
+            </div>
+
+            <div class="stat-card">
+                <div class="label">Total Messages</div>
+                <div class="value">290</div>
+                <div class="subvalue">0.5 avg per chat</div>
+            </div>
+
+            <div class="stat-card">
+                <div class="label">User Messages</div>
+                <div class="value">145</div>
+                <div class="subvalue">50.0% of total</div>
+            </div>
+
+            <div class="stat-card">
+                <div class="label">AI Responses</div>
+                <div class="value">145</div>
+                <div class="subvalue">Ratio: 1.0:1</div>
+            </div>
+        </div>
+
+        <div class="section">
+            <div class="cost-section">
+                <h3>💰 Azure Cost Breakdown</h3>
+                <div class="cost-grid">
+                    <div class="cost-item">
+                        <div class="cost-label">Total Actual Cost</div>
+                        <div class="cost-value">$694.98</div>
+                    </div>
+                    <div class="cost-item">
+                        <div class="cost-label">Forecast (30d)</div>
+                        <div class="cost-value">$1303.10</div>
+                    </div>
+                    <div class="cost-item">
+                        <div class="cost-label">Daily Average</div>
+                        <div class="cost-value">$43.44</div>
+                    </div>
+                </div>
+
+                <h4 style="margin-top: 25px; margin-bottom: 15px;">Top Services by Cost</h4>
+                <table style="background: rgba(255,255,255,0.95);">
+                    <thead>
+                        <tr>
+                            <th>Service Name</th>
+                            <th>Cost</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr><td>Virtual Machines</td><td>$332.00</td></tr><tr><td>Cognitive Services</td><td>$153.43</td></tr><tr><td>Storage</td><td>$111.26</td></tr><tr><td>Azure Applied AI Services</td><td>$49.66</td></tr><tr><td>Virtual Machine Licenses</td><td>$19.80</td></tr>
+                    </tbody>
+                </table>
+
+                <h4 style="margin-top: 25px; margin-bottom: 15px;">Top Resource Groups by Cost</h4>
+                <table style="background: rgba(255,255,255,0.95);">
+                    <thead>
+                        <tr>
+                            <th>Resource Group</th>
+                            <th>Cost</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        
+                    </tbody>
+                </table>
+            </div>
+        </div>
+
+        <div class="section">
+            <h2 class="section-title">Usage Trends - Last 30 Days</h2>
+            <div class="chart-container">
+                <canvas id="trendsChart"></canvas>
+            </div>
+        </div>
+
+        <div class="section">
+            <h2 class="section-title">Model Distribution</h2>
+            <div class="chart-container">
+                <canvas id="modelChart"></canvas>
+            </div>
+        </div>
+
+        <div class="section">
+            <h2 class="section-title">Top Users by Activity</h2>
+            <table>
+                <thead>
+                    <tr>
+                        <th>Rank</th>
+                        <th>Name</th>
+                        <th>Email</th>
+                        <th>Chats</th>
+                        <th>Messages</th>
+                        <th>Avg Msg/Chat</th>
+                        <th>Primary Models</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    
+                    <tr>
+                        <td>1</td>
+                        <td>Ben Willoughby</td>
+                        <td>bwilloughby@resecon.com</td>
+                        <td>60</td>
+                        <td>0</td>
+                        <td>0.0</td>
+                        <td><span class="model-badge">unknown</span></td>
+                    </tr>
+                    
+                    <tr>
+                        <td>2</td>
+                        <td>AI Admin</td>
+                        <td>admin@resecon.ai</td>
+                        <td>60</td>
+                        <td>290</td>
+                        <td>4.8</td>
+                        <td><span class="model-badge">resecon-general-model</span><span class="model-badge">resecon-fas-model</span><span class="model-badge">resecon-vision</span></td>
+                    </tr>
+                    
+                    <tr>
+                        <td>3</td>
+                        <td>Enrique De Leonardis</td>
+                        <td>edeleonardis@resecon.com</td>
+                        <td>51</td>
+                        <td>0</td>
+                        <td>0.0</td>
+                        <td><span class="model-badge">unknown</span></td>
+                    </tr>
+                    
+                    <tr>
+                        <td>4</td>
+                        <td>Sean Clancy</td>
+                        <td>sclancy@resecon.com</td>
+                        <td>38</td>
+                        <td>0</td>
+                        <td>0.0</td>
+                        <td><span class="model-badge">unknown</span></td>
+                    </tr>
+                    
+                    <tr>
+                        <td>5</td>
+                        <td>Will Botard</td>
+                        <td>wbotard@resecon.com</td>
+                        <td>38</td>
+                        <td>0</td>
+                        <td>0.0</td>
+                        <td><span class="model-badge">unknown</span></td>
+                    </tr>
+                    
+                    <tr>
+                        <td>6</td>
+                        <td>Taylor Ehrlich</td>
+                        <td>tehrlich@resecon.com</td>
+                        <td>29</td>
+                        <td>0</td>
+                        <td>0.0</td>
+                        <td><span class="model-badge">unknown</span></td>
+                    </tr>
+                    
+                    <tr>
+                        <td>7</td>
+                        <td>Bobby Lenahan</td>
+                        <td>blenahan@resecon.com</td>
+                        <td>28</td>
+                        <td>0</td>
+                        <td>0.0</td>
+                        <td><span class="model-badge">unknown</span></td>
+                    </tr>
+                    
+                    <tr>
+                        <td>8</td>
+                        <td>Morgan Johnson</td>
+                        <td>mjohnson@resecon.com</td>
+                        <td>24</td>
+                        <td>0</td>
+                        <td>0.0</td>
+                        <td><span class="model-badge">unknown</span></td>
+                    </tr>
+                    
+                    <tr>
+                        <td>9</td>
+                        <td>Ally Bandoian</td>
+                        <td>abandoian@resecon.com</td>
+                        <td>24</td>
+                        <td>0</td>
+                        <td>0.0</td>
+                        <td><span class="model-badge">unknown</span></td>
+                    </tr>
+                    
+                    <tr>
+                        <td>10</td>
+                        <td>Zarine Nanavati</td>
+                        <td>znanavati@resecon.com</td>
+                        <td>21</td>
+                        <td>0</td>
+                        <td>0.0</td>
+                        <td><span class="model-badge">unknown</span></td>
+                    </tr>
+                    
+                </tbody>
+            </table>
+        </div>
+
+        <div class="section">
+            <h2 class="section-title">Available Models (17 total)</h2>
+            <table>
+                <thead>
+                    <tr>
+                        <th>Model Name</th>
+                        <th>Model ID</th>
+                        <th>Usage Count</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    
+                    <tr>
+                        <td>Job Classification Model</td>
+                        <td><code>resecon-job-matching-model</code></td>
+                        <td>0</td>
+                    </tr>
+                    
+                    <tr>
+                        <td>FAS General Model</td>
+                        <td><code>resecon-general-model</code></td>
+                        <td>44</td>
+                    </tr>
+                    
+                    <tr>
+                        <td>FAS Document Analysis</td>
+                        <td><code>resecon-fas-model</code></td>
+                        <td>8</td>
+                    </tr>
+                    
+                    <tr>
+                        <td>Base Model</td>
+                        <td><code>base-model</code></td>
+                        <td>0</td>
+                    </tr>
+                    
+                    <tr>
+                        <td>AA/EEO Requirements - Reasoning</td>
+                        <td><code>berkshire-aaeeo-requirements</code></td>
+                        <td>0</td>
+                    </tr>
+                    
+                    <tr>
+                        <td>AA/EEO Requirements</td>
+                        <td><code>aaeeo-requirements-assistant</code></td>
+                        <td>0</td>
+                    </tr>
+                    
+                    <tr>
+                        <td>Job Classification - Reasoning</td>
+                        <td><code>job-classification---reasoning</code></td>
+                        <td>0</td>
+                    </tr>
+                    
+                    <tr>
+                        <td>Job Rating- Reasoning</td>
+                        <td><code>job-rating-by-relation</code></td>
+                        <td>0</td>
+                    </tr>
+                    
+                    <tr>
+                        <td>Job Rating - Fast</td>
+                        <td><code>job-rating-by-relation---fast</code></td>
+                        <td>0</td>
+                    </tr>
+                    
+                    <tr>
+                        <td>Labor-Employment-Wage & Hour</td>
+                        <td><code>labor-employment-wage--hour</code></td>
+                        <td>0</td>
+                    </tr>
+                    
+                    <tr>
+                        <td>AI Document Analyzer</td>
+                        <td><code>berkshire-dev---legal--compliance-ai-assistant</code></td>
+                        <td>0</td>
+                    </tr>
+                    
+                    <tr>
+                        <td>Document Assistant</td>
+                        <td><code>document-assistant</code></td>
+                        <td>0</td>
+                    </tr>
+                    
+                    <tr>
+                        <td>FAS - Predictive Analytics & Financial Forecasting</td>
+                        <td><code>predictive-analytics--financial-forecasting</code></td>
+                        <td>4</td>
+                    </tr>
+                    
+                    <tr>
+                        <td>FAS Risk Management & Fraud Detection</td>
+                        <td><code>risk-management--fraud-detection</code></td>
+                        <td>0</td>
+                    </tr>
+                    
+                    <tr>
+                        <td>FAS Regulatory Compliance & Reporting</td>
+                        <td><code>regulatory-compliance--reporting</code></td>
+                        <td>1</td>
+                    </tr>
+                    
+                    <tr>
+                        <td>Resecon Vision</td>
+                        <td><code>resecon-vision</code></td>
+                        <td>3</td>
+                    </tr>
+                    
+                    <tr>
+                        <td>DIDE (Dee~dee)</td>
+                        <td><code>docuinsight-data-engine-plus</code></td>
+                        <td>0</td>
+                    </tr>
+                    
+                </tbody>
+            </table>
+            
+        </div>
+
+        <div class="section">
+            <h2 class="section-title">Knowledge Bases (45 total)</h2>
+            
+            <div class="kb-card">
+                <h3>Marketing email</h3>
+                <p><strong>ID:</strong> 516c3e80-9b8f-459a-b49b-4c73611c02ec</p>
+            </div>
+            
+            <div class="kb-card">
+                <h3>LA Valuation RFP </h3>
+                <p><strong>ID:</strong> 1118aff3-b32f-4b74-9dff-449a1df99a65</p>
+            </div>
+            
+            <div class="kb-card">
+                <h3>Project Charge</h3>
+                <p><strong>ID:</strong> b1bcfe77-52f7-4845-ad40-f8ac3f1192a8</p>
+            </div>
+            
+            <div class="kb-card">
+                <h3>LDR EXCEL</h3>
+                <p><strong>ID:</strong> 58e37a42-f0f6-424b-afd2-3e050135315a</p>
+            </div>
+            
+            <div class="kb-card">
+                <h3>Training</h3>
+                <p><strong>ID:</strong> af8cb214-32e9-4a78-853d-1d3464bde637</p>
+            </div>
+            
+            <div class="kb-card">
+                <h3>Torres v. Morales</h3>
+                <p><strong>ID:</strong> 4bfc35bb-452a-42e4-a753-f99f18de904e</p>
+            </div>
+            
+            <div class="kb-card">
+                <h3>Yarmouth RFP</h3>
+                <p><strong>ID:</strong> 1871a989-653e-4eec-9b0f-57604b50a0b4</p>
+            </div>
+            
+            <div class="kb-card">
+                <h3>FIFE RFP</h3>
+                <p><strong>ID:</strong> 1eb62a67-deee-45ae-8347-ca6fbcad4a8c</p>
+            </div>
+            
+            <div class="kb-card">
+                <h3>Holistic Expert Report</h3>
+                <p><strong>ID:</strong> e1e35081-0576-4b84-9c61-822e8cc36b2a</p>
+            </div>
+            
+            <div class="kb-card">
+                <h3>Oak Coast - Cross Complaint</h3>
+                <p><strong>ID:</strong> 6035e208-5635-4800-91f2-f0d55f10dc0c</p>
+            </div>
+            
+            <div class="kb-card">
+                <h3>Oak Coast - Complaints</h3>
+                <p><strong>ID:</strong> a5b5fc76-a8a8-4bd9-960e-6fdc14d1a15e</p>
+            </div>
+            
+            <div class="kb-card">
+                <h3>Potential project</h3>
+                <p><strong>ID:</strong> b1352840-333c-4e40-b933-a3673ccf23be</p>
+            </div>
+            
+            <div class="kb-card">
+                <h3>Bedi Cases</h3>
+                <p><strong>ID:</strong> 5abe8ed8-9cf7-4f52-a834-da336fc40492</p>
+            </div>
+            
+            <div class="kb-card">
+                <h3>NACVA Standards</h3>
+                <p><strong>ID:</strong> 0898b30b-bf1b-4f2b-82eb-d5a61259ffe4</p>
+            </div>
+            
+            <div class="kb-card">
+                <h3>Newsletter Contacts</h3>
+                <p><strong>ID:</strong> 127557a8-f1f6-4588-987a-ff5dda64f84d</p>
+            </div>
+            
+            <div class="kb-card">
+                <h3>Holistic Depositions - Holistic Others</h3>
+                <p><strong>ID:</strong> 2828cfcf-73b3-4e71-b084-1cdcf36fe709</p>
+            </div>
+            
+            <div class="kb-card">
+                <h3>Holistic - Q2 and Q3 2021 Updates</h3>
+                <p><strong>ID:</strong> fd67b10e-bc00-4694-b637-30e543da6cdd</p>
+            </div>
+            
+            <div class="kb-card">
+                <h3>Valuation RFP</h3>
+                <p><strong>ID:</strong> 9bbea4fc-fe08-4c69-b51e-088b59cc8be7</p>
+            </div>
+            
+            <div class="kb-card">
+                <h3>Holistic - Public Company Reports</h3>
+                <p><strong>ID:</strong> ceb54940-5c5d-472a-8518-8cc758b5acb2</p>
+            </div>
+            
+            <div class="kb-card">
+                <h3>Project UP - Reporting</h3>
+                <p><strong>ID:</strong> d0843cbc-1e44-48ae-87b5-e66317d2a51e</p>
+            </div>
+            
+            <p style="text-align: center; color: #666; margin-top: 20px;">... and 25 more</p>
+        </div>
+    </div>
+
+    <script>
+        // Trends Chart
+        const trendsCtx = document.getElementById('trendsChart').getContext('2d');
+        new Chart(trendsCtx, {
+            type: 'line',
+            data: {
+                labels: ["2025-10-03", "2025-10-05", "2025-10-06", "2025-10-07", "2025-10-08", "2025-10-10", "2025-10-13", "2025-10-14", "2025-10-15", "2025-10-16", "2025-10-17", "2025-10-20", "2025-10-21", "2025-10-22", "2025-10-23", "2025-10-24", "2025-10-27", "2025-10-28", "2025-10-29", "2025-10-30", "2025-11-03", "2025-11-04", "2025-11-05", "2025-11-06", "2025-11-09", "2025-11-10", "2025-11-11", "2025-11-12", "2025-11-13", "2025-11-14"],
+                datasets: [{
+                    label: 'Daily Chats',
+                    data: [7, 1, 34, 28, 5, 1, 4, 3, 2, 21, 2, 1, 9, 4, 6, 4, 1, 6, 1, 6, 3, 7, 3, 2, 8, 5, 1, 5, 5, 4],
+                    borderColor: '#667eea',
+                    backgroundColor: 'rgba(102, 126, 234, 0.1)',
+                    tension: 0.4,
+                    fill: true
+                }]
+            },
+            options: {
+                responsive: true,
+                maintainAspectRatio: false,
+                plugins: {
+                    legend: {
+                        display: true,
+                        position: 'top'
+                    }
+                },
+                scales: {
+                    y: {
+                        beginAtZero: true
+                    }
+                }
+            }
+        });
+
+        // Model Distribution Chart
+        const modelCtx = document.getElementById('modelChart').getContext('2d');
+        new Chart(modelCtx, {
+            type: 'doughnut',
+            data: {
+                labels: ["unknown", "resecon-general-model", "resecon-fas-model", "resecon-vision", "grok-3", "predictive-analytics--financial-forecasting", "regulatory-compliance--reporting"],
+                datasets: [{
+                    data: [482, 44, 8, 3, 1, 4, 1],
+                    backgroundColor: [
+                        '#667eea', '#764ba2', '#f093fb', '#4facfe',
+                        '#43e97b', '#fa709a', '#fee140', '#30cfd0',
+                        '#a8edea', '#fed6e3'
+                    ]
+                }]
+            },
+            options: {
+                responsive: true,
+                maintainAspectRatio: false,
+                plugins: {
+                    legend: {
+                        position: 'right'
+                    }
+                }
+            }
+        });
+    </script>
+</body>
+</html>

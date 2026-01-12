@@ -1,0 +1,695 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>berkshireGPT Analytics Report (DB)</title>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            padding: 20px;
+            color: #333;
+        }
+
+        .container {
+            max-width: 1400px;
+            margin: 0 auto;
+            background: white;
+            border-radius: 20px;
+            box-shadow: 0 20px 60px rgba(0,0,0,0.3);
+            overflow: hidden;
+        }
+
+        .header {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 40px;
+            text-align: center;
+        }
+
+        .header h1 {
+            font-size: 2.5em;
+            margin-bottom: 10px;
+        }
+
+        .header .subtitle {
+            font-size: 1.1em;
+            opacity: 0.9;
+        }
+
+        .header .badge {
+            display: inline-block;
+            background: rgba(255,255,255,0.2);
+            padding: 8px 16px;
+            border-radius: 20px;
+            margin-top: 10px;
+            font-size: 0.9em;
+        }
+
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 20px;
+            padding: 40px;
+            background: #f8f9fa;
+        }
+
+        .stat-card {
+            background: white;
+            padding: 25px;
+            border-radius: 15px;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+            transition: transform 0.3s, box-shadow 0.3s;
+        }
+
+        .stat-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 25px rgba(0,0,0,0.15);
+        }
+
+        .stat-card .label {
+            font-size: 0.9em;
+            color: #666;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            margin-bottom: 10px;
+        }
+
+        .stat-card .value {
+            font-size: 2.5em;
+            font-weight: bold;
+            color: #667eea;
+        }
+
+        .stat-card .subvalue {
+            font-size: 0.9em;
+            color: #999;
+            margin-top: 5px;
+        }
+
+        .section {
+            padding: 40px;
+        }
+
+        .section-title {
+            font-size: 1.8em;
+            margin-bottom: 25px;
+            color: #333;
+            border-bottom: 3px solid #667eea;
+            padding-bottom: 10px;
+        }
+
+        .chart-container {
+            position: relative;
+            height: 400px;
+            margin: 30px 0;
+            background: white;
+            padding: 20px;
+            border-radius: 15px;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            background: white;
+            border-radius: 15px;
+            overflow: hidden;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+            margin: 20px 0;
+        }
+
+        th {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 15px;
+            text-align: left;
+            font-weight: 600;
+        }
+
+        td {
+            padding: 12px 15px;
+            border-bottom: 1px solid #f0f0f0;
+        }
+
+        tr:hover {
+            background: #f8f9fa;
+        }
+
+        .model-badge {
+            display: inline-block;
+            padding: 5px 10px;
+            background: #667eea;
+            color: white;
+            border-radius: 15px;
+            font-size: 0.85em;
+            margin: 2px;
+        }
+
+        .kb-card {
+            background: white;
+            padding: 20px;
+            margin: 10px 0;
+            border-radius: 10px;
+            border-left: 4px solid #667eea;
+            box-shadow: 0 3px 10px rgba(0,0,0,0.1);
+        }
+
+        .kb-card h3 {
+            color: #667eea;
+            margin-bottom: 10px;
+        }
+
+        .cost-section {
+            background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);
+            color: white;
+            padding: 30px;
+            border-radius: 15px;
+            margin: 20px 0;
+        }
+
+        .cost-section h3 {
+            margin-bottom: 15px;
+            font-size: 1.5em;
+        }
+
+        .cost-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 15px;
+            margin-top: 20px;
+        }
+
+        .cost-item {
+            background: rgba(255,255,255,0.2);
+            padding: 15px;
+            border-radius: 10px;
+        }
+
+        .cost-item .cost-label {
+            font-size: 0.9em;
+            opacity: 0.9;
+        }
+
+        .cost-item .cost-value {
+            font-size: 1.8em;
+            font-weight: bold;
+            margin-top: 5px;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>berkshireGPT Analytics Dashboard</h1>
+            <div class="subtitle">Generated from Database Export</div>
+            <div class="badge">Database Analysis Mode - Fast & Offline</div>
+            <div class="subtitle" style="margin-top: 10px;">Generated on November 17, 2025 at 12:09 PM</div>
+        </div>
+
+        <div class="stats-grid">
+            <div class="stat-card">
+                <div class="label">Total Users</div>
+                <div class="value">15</div>
+                <div class="subvalue">12 active (80.0%)</div>
+            </div>
+
+            <div class="stat-card">
+                <div class="label">Total Chats</div>
+                <div class="value">523</div>
+                <div class="subvalue">43.6 per active user</div>
+            </div>
+
+            <div class="stat-card">
+                <div class="label">Azure Cost (MTD)</div>
+                <div class="value">$0.00</div>
+                <div class="subvalue">Month to date</div>
+            </div>
+
+            <div class="stat-card">
+                <div class="label">Models</div>
+                <div class="value">17</div>
+                <div class="subvalue">21 actively used</div>
+            </div>
+
+            <div class="stat-card">
+                <div class="label">Knowledge Bases</div>
+                <div class="value">9</div>
+                <div class="subvalue">Available resources</div>
+            </div>
+
+            <div class="stat-card">
+                <div class="label">30-Day Forecast</div>
+                <div class="value">$0.00</div>
+                <div class="subvalue">Projected spend</div>
+            </div>
+
+            <div class="stat-card">
+                <div class="label">Total Messages</div>
+                <div class="value">4,364</div>
+                <div class="subvalue">8.3 avg per chat</div>
+            </div>
+
+            <div class="stat-card">
+                <div class="label">User Messages</div>
+                <div class="value">2,182</div>
+                <div class="subvalue">50.0% of total</div>
+            </div>
+
+            <div class="stat-card">
+                <div class="label">AI Responses</div>
+                <div class="value">2,182</div>
+                <div class="subvalue">Ratio: 1.0:1</div>
+            </div>
+        </div>
+
+        <div class="section">
+            <div class="cost-section">
+                <h3>Azure Cost Breakdown</h3>
+                <div class="cost-grid">
+                    <div class="cost-item">
+                        <div class="cost-label">Total Actual Cost</div>
+                        <div class="cost-value">$0.00</div>
+                    </div>
+                    <div class="cost-item">
+                        <div class="cost-label">Forecast (30d)</div>
+                        <div class="cost-value">$0.00</div>
+                    </div>
+                    <div class="cost-item">
+                        <div class="cost-label">Daily Average</div>
+                        <div class="cost-value">$0.00</div>
+                    </div>
+                </div>
+
+                <h4 style="margin-top: 25px; margin-bottom: 15px;">Top Services by Cost</h4>
+                <table style="background: rgba(255,255,255,0.95);">
+                    <thead>
+                        <tr>
+                            <th>Service Name</th>
+                            <th>Cost</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr><td colspan="2">No cost data available</td></tr>
+                    </tbody>
+                </table>
+
+                <h4 style="margin-top: 25px; margin-bottom: 15px;">Top Resource Groups by Cost</h4>
+                <table style="background: rgba(255,255,255,0.95);">
+                    <thead>
+                        <tr>
+                            <th>Resource Group</th>
+                            <th>Cost</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr><td colspan="2">No cost data available</td></tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+
+        <div class="section">
+            <h2 class="section-title">Usage Trends - Last 30 Days</h2>
+            <div class="chart-container">
+                <canvas id="trendsChart"></canvas>
+            </div>
+        </div>
+
+        <div class="section">
+            <h2 class="section-title">Model Distribution</h2>
+            <div class="chart-container">
+                <canvas id="modelChart"></canvas>
+            </div>
+        </div>
+
+        <div class="section">
+            <h2 class="section-title">Top Users by Activity</h2>
+            <table>
+                <thead>
+                    <tr>
+                        <th>Rank</th>
+                        <th>Name</th>
+                        <th>Email</th>
+                        <th>Chats</th>
+                        <th>Messages</th>
+                        <th>Avg Msg/Chat</th>
+                        <th>Primary Models</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    
+                    <tr>
+                        <td>1</td>
+                        <td>Lehem Felican</td>
+                        <td>lfelican@resecon.ai</td>
+                        <td>247</td>
+                        <td>1,686</td>
+                        <td>6.8</td>
+                        <td><span class="model-badge">berkshire-general-model-41</span><span class="model-badge">gpt-5</span><span class="model-badge">resecon-general-model</span></td>
+                    </tr>
+                    
+                    <tr>
+                        <td>2</td>
+                        <td>Lehem Felican</td>
+                        <td>lfelican@resecon.com</td>
+                        <td>66</td>
+                        <td>368</td>
+                        <td>5.6</td>
+                        <td><span class="model-badge">docuinsight-data-engine-plus</span><span class="model-badge">dataproc</span><span class="model-badge">data-analyzer</span></td>
+                    </tr>
+                    
+                    <tr>
+                        <td>3</td>
+                        <td>Karl Hester</td>
+                        <td>karl.hester@berkshireassociates.com</td>
+                        <td>65</td>
+                        <td>818</td>
+                        <td>12.6</td>
+                        <td><span class="model-badge">berkshire-general-model-41</span><span class="model-badge">berkshire-gen-5-data-analysis</span><span class="model-badge">berkshire-gen-5</span></td>
+                    </tr>
+                    
+                    <tr>
+                        <td>4</td>
+                        <td>Brian Marentette</td>
+                        <td>brian.marentette@berkshireassociates.com</td>
+                        <td>32</td>
+                        <td>182</td>
+                        <td>5.7</td>
+                        <td><span class="model-badge">resecon-general-model</span><span class="model-badge">berkshire-gen-5</span></td>
+                    </tr>
+                    
+                    <tr>
+                        <td>5</td>
+                        <td>Aimee Kirby</td>
+                        <td>aimee.kirby@berkshireassociates.com</td>
+                        <td>30</td>
+                        <td>246</td>
+                        <td>8.2</td>
+                        <td><span class="model-badge">resecon-general-model</span><span class="model-badge">berkshire-gen-5</span><span class="model-badge">base-model</span></td>
+                    </tr>
+                    
+                    <tr>
+                        <td>6</td>
+                        <td>Rachel Rubino</td>
+                        <td>rachel.rubino@berkshireassociates.com</td>
+                        <td>29</td>
+                        <td>428</td>
+                        <td>14.8</td>
+                        <td><span class="model-badge">berkshire-general-model-41</span><span class="model-badge">base-model</span><span class="model-badge">berkshire-gen-5-data-analysis</span></td>
+                    </tr>
+                    
+                    <tr>
+                        <td>7</td>
+                        <td>Kristen Johnson</td>
+                        <td>kristen.johnson@berkshireassociates.com</td>
+                        <td>24</td>
+                        <td>214</td>
+                        <td>8.9</td>
+                        <td><span class="model-badge">berkshire-general-model-41</span><span class="model-badge">berkshire-gen-5-data-analysis</span><span class="model-badge">docuinsight-data-engine-plus-c</span></td>
+                    </tr>
+                    
+                    <tr>
+                        <td>8</td>
+                        <td>Michele Hester</td>
+                        <td>michele.hester@berkshireassociates.com</td>
+                        <td>12</td>
+                        <td>102</td>
+                        <td>8.5</td>
+                        <td><span class="model-badge">berkshire-general-model-41</span><span class="model-badge">resecon-general-model</span><span class="model-badge">docuinsight-data-engine-plus</span></td>
+                    </tr>
+                    
+                    <tr>
+                        <td>9</td>
+                        <td>Patrick Nooren</td>
+                        <td>patrick.nooren@berkshireassociates.com</td>
+                        <td>7</td>
+                        <td>68</td>
+                        <td>9.7</td>
+                        <td><span class="model-badge">resecon-general-model</span><span class="model-badge">berkshire-general-model-41</span><span class="model-badge">docuinsight-data-engine-plus</span></td>
+                    </tr>
+                    
+                    <tr>
+                        <td>10</td>
+                        <td>Thomas Carnahan (berkshire)</td>
+                        <td>thomas.carnahan@berkshireassociates.com</td>
+                        <td>5</td>
+                        <td>48</td>
+                        <td>9.6</td>
+                        <td><span class="model-badge">resecon-job-matching-model</span><span class="model-badge">resecon-general-model</span></td>
+                    </tr>
+                    
+                </tbody>
+            </table>
+        </div>
+
+        <div class="section">
+            <h2 class="section-title">Available Models (17 total)</h2>
+            <table>
+                <thead>
+                    <tr>
+                        <th>Model Name</th>
+                        <th>Model ID</th>
+                        <th>Usage Count</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    
+                    <tr>
+                        <td>AA/EEO Requirements</td>
+                        <td><code>aaeeo-requirements-assistant</code></td>
+                        <td>4</td>
+                    </tr>
+                    
+                    <tr>
+                        <td>Berkshire Gen 5</td>
+                        <td><code>berkshire-gen-5</code></td>
+                        <td>11</td>
+                    </tr>
+                    
+                    <tr>
+                        <td>Berkshire Gen 5 (Data Analysis)</td>
+                        <td><code>berkshire-gen-5-data-analysis</code></td>
+                        <td>21</td>
+                    </tr>
+                    
+                    <tr>
+                        <td>Berkshire General Model 4.1</td>
+                        <td><code>berkshire-general-model-41</code></td>
+                        <td>113</td>
+                    </tr>
+                    
+                    <tr>
+                        <td>Berkshire General Model 4.1 (DEV)</td>
+                        <td><code>berkshire-general-model-41-dev</code></td>
+                        <td>24</td>
+                    </tr>
+                    
+                    <tr>
+                        <td>Client AI Usage Assistant</td>
+                        <td><code>berkshire-dev---legal--compliance-ai-assistant</code></td>
+                        <td>8</td>
+                    </tr>
+                    
+                    <tr>
+                        <td>DIDE (Dee~dee)</td>
+                        <td><code>docuinsight-data-engine-plus</code></td>
+                        <td>54</td>
+                    </tr>
+                    
+                    <tr>
+                        <td>DIDE (Dee~dee) (dev)</td>
+                        <td><code>docuinsight-data-engine-plus-clone</code></td>
+                        <td>4</td>
+                    </tr>
+                    
+                    <tr>
+                        <td>Data & Reports</td>
+                        <td><code>berkshire-gen-5-mini</code></td>
+                        <td>8</td>
+                    </tr>
+                    
+                    <tr>
+                        <td>DocuInsight Data Engine</td>
+                        <td><code>dataproc</code></td>
+                        <td>4</td>
+                    </tr>
+                    
+                    <tr>
+                        <td>Document Assistant</td>
+                        <td><code>document-assistant</code></td>
+                        <td>2</td>
+                    </tr>
+                    
+                    <tr>
+                        <td>Job Classification Model</td>
+                        <td><code>resecon-job-matching-model</code></td>
+                        <td>4</td>
+                    </tr>
+                    
+                    <tr>
+                        <td>Job Description Classification Model PI team</td>
+                        <td><code>job-description-classification-model-pi-team</code></td>
+                        <td>3</td>
+                    </tr>
+                    
+                    <tr>
+                        <td>Resecon General Model</td>
+                        <td><code>resecon-general-model</code></td>
+                        <td>169</td>
+                    </tr>
+                    
+                    <tr>
+                        <td>gpt-5</td>
+                        <td><code>gpt-5</code></td>
+                        <td>1</td>
+                    </tr>
+                    
+                    <tr>
+                        <td>gpt-5-mini</td>
+                        <td><code>gpt-5-mini</code></td>
+                        <td>0</td>
+                    </tr>
+                    
+                    <tr>
+                        <td>gpt4.1 Base Model</td>
+                        <td><code>base-model</code></td>
+                        <td>52</td>
+                    </tr>
+                    
+                </tbody>
+            </table>
+            
+        </div>
+
+        <div class="section">
+            <h2 class="section-title">Knowledge Bases (9 total)</h2>
+            
+            <div class="kb-card">
+                <h3>AA/EEO-1 Data</h3>
+                <p><strong>ID:</strong> 09c5e0c0-46c7-49e9-921b-50f84ff8acab</p>
+                <p>AA/EEO-1</p>
+            </div>
+            
+            <div class="kb-card">
+                <h3>CSV Executive Summary</h3>
+                <p><strong>ID:</strong> a2014d6c-7a35-4375-9a61-a7372aaed355</p>
+                <p>Executive Summary with Data Files in CSV</p>
+            </div>
+            
+            <div class="kb-card">
+                <h3>Data Checks</h3>
+                <p><strong>ID:</strong> 817d60f4-0f4e-4a01-8c45-3d4c79eaff8a</p>
+                <p>looking for proper data provided by client to continue with IWD/PV plan preparation</p>
+            </div>
+            
+            <div class="kb-card">
+                <h3>Data Cleanup Testing</h3>
+                <p><strong>ID:</strong> 531debaf-585b-4af6-b1a1-9a8ce605c119</p>
+                <p>Sample Files to Check Data Cleanup
+</p>
+            </div>
+            
+            <div class="kb-card">
+                <h3>Data checks</h3>
+                <p><strong>ID:</strong> 488dbf52-92c8-4899-ad80-83a39553d10d</p>
+                <p>basic data checks for pviwd</p>
+            </div>
+            
+            <div class="kb-card">
+                <h3>Executive Summary</h3>
+                <p><strong>ID:</strong> ece6efe8-481d-4e40-af89-0255834cb09f</p>
+                <p>Create and executive summary</p>
+            </div>
+            
+            <div class="kb-card">
+                <h3>JSON Executive Summary</h3>
+                <p><strong>ID:</strong> c1d8d363-cfb5-4cc3-84b2-d6778ca6faa6</p>
+                <p>Executive Summary using JSON</p>
+            </div>
+            
+            <div class="kb-card">
+                <h3>Lee Dev</h3>
+                <p><strong>ID:</strong> 4e9e5b20-0614-450b-bed7-23ef75fc3f29</p>
+                <p>dev</p>
+            </div>
+            
+            <div class="kb-card">
+                <h3>ODOT Jobs</h3>
+                <p><strong>ID:</strong> 00bc3a3e-4af5-4115-8787-4c80e58ada93</p>
+                <p>List the ODOT Jobs</p>
+            </div>
+            
+            
+        </div>
+    </div>
+
+    <script>
+        // Trends Chart
+        const trendsCtx = document.getElementById('trendsChart').getContext('2d');
+        new Chart(trendsCtx, {
+            type: 'line',
+            data: {
+                labels: ["2025-10-10", "2025-10-13", "2025-10-14", "2025-10-15", "2025-10-16", "2025-10-17", "2025-10-19", "2025-10-20", "2025-10-21", "2025-10-22", "2025-10-23", "2025-10-24", "2025-10-27", "2025-10-28", "2025-10-29", "2025-10-30", "2025-10-31", "2025-11-01", "2025-11-02", "2025-11-03", "2025-11-04", "2025-11-05", "2025-11-06", "2025-11-07", "2025-11-09", "2025-11-10", "2025-11-11", "2025-11-12", "2025-11-14", "2025-11-17"],
+                datasets: [{
+                    label: 'Daily Chats',
+                    data: [19, 13, 9, 15, 10, 24, 9, 28, 21, 16, 14, 30, 9, 4, 8, 8, 11, 7, 5, 18, 38, 15, 2, 6, 1, 1, 3, 1, 4, 1],
+                    borderColor: '#667eea',
+                    backgroundColor: 'rgba(102, 126, 234, 0.1)',
+                    tension: 0.4,
+                    fill: true
+                }]
+            },
+            options: {
+                responsive: true,
+                maintainAspectRatio: false,
+                plugins: {
+                    legend: {
+                        display: true,
+                        position: 'top'
+                    }
+                },
+                scales: {
+                    y: {
+                        beginAtZero: true
+                    }
+                }
+            }
+        });
+
+        // Model Distribution Chart
+        const modelCtx = document.getElementById('modelChart').getContext('2d');
+        new Chart(modelCtx, {
+            type: 'doughnut',
+            data: {
+                labels: ["resecon-general-model", "berkshire-gen-5", "base-model", "berkshire-general-model-41", "berkshire-gen-5-data-analysis", "job-description-classification-model-pi-team", "docuinsight-data-engine-plus-clone", "docuinsight-data-engine-plus", "resecon-job-matching-model", "berkshire-dev---legal--compliance-ai-assistant"],
+                datasets: [{
+                    data: [169, 11, 52, 113, 21, 3, 4, 54, 4, 8],
+                    backgroundColor: [
+                        '#667eea', '#764ba2', '#f093fb', '#4facfe',
+                        '#43e97b', '#fa709a', '#fee140', '#30cfd0',
+                        '#a8edea', '#fed6e3'
+                    ]
+                }]
+            },
+            options: {
+                responsive: true,
+                maintainAspectRatio: false,
+                plugins: {
+                    legend: {
+                        position: 'right'
+                    }
+                }
+            }
+        });
+    </script>
+</body>
+</html>

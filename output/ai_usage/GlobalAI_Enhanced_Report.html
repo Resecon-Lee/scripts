@@ -1,0 +1,424 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Global AI Platform Analytics</title>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            padding: 20px;
+            color: #333;
+        }
+
+        .container {
+            max-width: 1600px;
+            margin: 0 auto;
+            background: white;
+            border-radius: 20px;
+            box-shadow: 0 20px 60px rgba(0,0,0,0.3);
+            overflow: hidden;
+        }
+
+        .header {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 50px;
+            text-align: center;
+        }
+
+        .header h1 {
+            font-size: 3em;
+            margin-bottom: 10px;
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.2);
+        }
+
+        .header .subtitle {
+            font-size: 1.2em;
+            opacity: 0.95;
+        }
+
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 20px;
+            padding: 40px;
+            background: #f8f9fa;
+        }
+
+        .stat-card {
+            background: white;
+            padding: 25px;
+            border-radius: 15px;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+            transition: transform 0.3s, box-shadow 0.3s;
+            text-align: center;
+        }
+
+        .stat-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 25px rgba(0,0,0,0.15);
+        }
+
+        .stat-card .label {
+            font-size: 0.85em;
+            color: #666;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            margin-bottom: 10px;
+        }
+
+        .stat-card .value {
+            font-size: 2.2em;
+            font-weight: bold;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        .stat-card .subvalue {
+            font-size: 0.85em;
+            color: #999;
+            margin-top: 8px;
+        }
+
+        .section {
+            padding: 40px;
+        }
+
+        .section-title {
+            font-size: 2em;
+            margin-bottom: 30px;
+            color: #333;
+            border-bottom: 4px solid #667eea;
+            padding-bottom: 15px;
+            display: inline-block;
+        }
+
+        .charts-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(500px, 1fr));
+            gap: 30px;
+            margin: 30px 0;
+        }
+
+        .chart-container {
+            position: relative;
+            height: 400px;
+            background: white;
+            padding: 25px;
+            border-radius: 15px;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+        }
+
+        .chart-title {
+            font-size: 1.3em;
+            margin-bottom: 20px;
+            color: #667eea;
+            font-weight: 600;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            background: white;
+            border-radius: 15px;
+            overflow: hidden;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+            margin: 20px 0;
+        }
+
+        th {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 18px 15px;
+            text-align: left;
+            font-weight: 600;
+            font-size: 1em;
+        }
+
+        td {
+            padding: 15px;
+            border-bottom: 1px solid #f0f0f0;
+        }
+
+        tr:hover {
+            background: #f8f9fa;
+        }
+
+        .instance-badge {
+            display: inline-block;
+            padding: 5px 12px;
+            border-radius: 20px;
+            font-size: 0.8em;
+            font-weight: 600;
+            margin: 2px;
+        }
+
+        .badge-resgpt {
+            background: #e3f2fd;
+            color: #1976d2;
+        }
+
+        .badge-fasgpt {
+            background: #f3e5f5;
+            color: #7b1fa2;
+        }
+
+        .badge-berkshiregpt {
+            background: #e8f5e9;
+            color: #388e3c;
+        }
+
+        .cost-indicator {
+            font-weight: bold;
+            font-size: 1.1em;
+        }
+
+        .cost-high { color: #e74c3c; }
+        .cost-medium { color: #f39c12; }
+        .cost-low { color: #27ae60; }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>🌐 Global AI Platform Analytics</h1>
+            <div class="subtitle">Comprehensive Analysis Across ResGPT, FASGPT, and BerkshireGPT</div>
+            <div class="subtitle" style="margin-top: 10px; font-size: 0.9em;">Generated on November 14, 2025 at 01:48 PM</div>
+        </div>
+
+        <div class="stats-grid">
+            <div class="stat-card">
+                <div class="label">Total Platforms</div>
+                <div class="value">3</div>
+                <div class="subvalue">ResGPT, FASGPT, BerkshireGPT</div>
+            </div>
+
+            <div class="stat-card">
+                <div class="label">Total Chats</div>
+                <div class="value">1,291</div>
+                <div class="subvalue">Across all platforms</div>
+            </div>
+
+            <div class="stat-card">
+                <div class="label">Total Tokens</div>
+                <div class="value">0.46M</div>
+                <div class="subvalue">Input: 0.01M | Output: 0.46M</div>
+            </div>
+
+            <div class="stat-card">
+                <div class="label">Total Cost</div>
+                <div class="value">$6.88</div>
+                <div class="subvalue">Estimated spend</div>
+            </div>
+
+            <div class="stat-card">
+                <div class="label">Total Models</div>
+                <div class="value">60</div>
+                <div class="subvalue">1 actively used</div>
+            </div>
+
+            <div class="stat-card">
+                <div class="label">Knowledge Bases</div>
+                <div class="value">67</div>
+                <div class="subvalue">Across all platforms</div>
+            </div>
+        </div>
+
+        <div class="section">
+            <h2 class="section-title">Platform Comparison</h2>
+            <div class="charts-grid">
+                <div class="chart-container">
+                    <div class="chart-title">Chats by Instance</div>
+                    <canvas id="instanceChatsChart"></canvas>
+                </div>
+                <div class="chart-container">
+                    <div class="chart-title">Cost by Instance</div>
+                    <canvas id="instanceCostsChart"></canvas>
+                </div>
+            </div>
+        </div>
+
+        <div class="section">
+            <h2 class="section-title">Global Usage Trends - Last 30 Days</h2>
+            <div class="chart-container" style="height: 450px;">
+                <canvas id="trendsChart"></canvas>
+            </div>
+        </div>
+
+        <div class="section">
+            <h2 class="section-title">Model Distribution Across All Platforms</h2>
+            <div class="chart-container" style="height: 500px;">
+                <canvas id="modelChart"></canvas>
+            </div>
+        </div>
+
+        <div class="section">
+            <h2 class="section-title">Instance Details</h2>
+            <table>
+                <thead>
+                    <tr>
+                        <th>Instance</th>
+                        <th>Total Chats</th>
+                        <th>Tokens (M)</th>
+                        <th>Estimated Cost</th>
+                        <th>Active Models</th>
+                        <th>Knowledge Bases</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    
+                    <tr>
+                        <td><span class="instance-badge badge-resgpt">RESGPT</span></td>
+                        <td>428</td>
+                        <td>0.04</td>
+                        <td class="cost-indicator cost-low">$0.52</td>
+                        <td>1</td>
+                        <td>13</td>
+                    </tr>
+                    
+                    <tr>
+                        <td><span class="instance-badge badge-fasgpt">FASGPT</span></td>
+                        <td>539</td>
+                        <td>0.40</td>
+                        <td class="cost-indicator cost-low">$6.03</td>
+                        <td>1</td>
+                        <td>45</td>
+                    </tr>
+                    
+                    <tr>
+                        <td><span class="instance-badge badge-berkshiregpt">BERKSHIREGPT</span></td>
+                        <td>324</td>
+                        <td>0.02</td>
+                        <td class="cost-indicator cost-low">$0.33</td>
+                        <td>1</td>
+                        <td>9</td>
+                    </tr>
+                    
+                </tbody>
+            </table>
+        </div>
+    </div>
+
+    <script>
+        // Instance Chats Comparison
+        const chatsCtx = document.getElementById('instanceChatsChart').getContext('2d');
+        new Chart(chatsCtx, {
+            type: 'bar',
+            data: {
+                labels: ["RESGPT", "FASGPT", "BERKSHIREGPT"],
+                datasets: [{
+                    label: 'Total Chats',
+                    data: [428, 539, 324],
+                    backgroundColor: ['#667eea', '#764ba2', '#43e97b']
+                }]
+            },
+            options: {
+                responsive: true,
+                maintainAspectRatio: false,
+                plugins: {
+                    legend: { display: false }
+                },
+                scales: {
+                    y: { beginAtZero: true }
+                }
+            }
+        });
+
+        // Instance Costs Comparison
+        const costsCtx = document.getElementById('instanceCostsChart').getContext('2d');
+        new Chart(costsCtx, {
+            type: 'bar',
+            data: {
+                labels: ["RESGPT", "FASGPT", "BERKSHIREGPT"],
+                datasets: [{
+                    label: 'Estimated Cost ($)',
+                    data: [0.5154000000000001, 6.0329999999999995, 0.32955],
+                    backgroundColor: ['#f093fb', '#4facfe', '#fee140']
+                }]
+            },
+            options: {
+                responsive: true,
+                maintainAspectRatio: false,
+                plugins: {
+                    legend: { display: false }
+                },
+                scales: {
+                    y: { beginAtZero: true }
+                }
+            }
+        });
+
+        // Global Trends
+        const trendsCtx = document.getElementById('trendsChart').getContext('2d');
+        new Chart(trendsCtx, {
+            type: 'line',
+            data: {
+                labels: ["2025-10-10", "2025-10-13", "2025-10-14", "2025-10-15", "2025-10-16", "2025-10-17", "2025-10-18", "2025-10-19", "2025-10-20", "2025-10-21", "2025-10-22", "2025-10-23", "2025-10-24", "2025-10-27", "2025-10-28", "2025-10-29", "2025-10-30", "2025-10-31", "2025-11-03", "2025-11-04", "2025-11-05", "2025-11-06", "2025-11-07", "2025-11-08", "2025-11-09", "2025-11-10", "2025-11-11", "2025-11-12", "2025-11-13", "2025-11-14"],
+                datasets: [{
+                    label: 'Daily Chats (All Platforms)',
+                    data: [8, 23, 12, 19, 27, 6, 2, 1, 7, 18, 19, 16, 24, 10, 10, 10, 17, 7, 16, 49, 25, 7, 8, 1, 13, 14, 21, 20, 11, 4],
+                    borderColor: '#667eea',
+                    backgroundColor: 'rgba(102, 126, 234, 0.1)',
+                    tension: 0.4,
+                    fill: true,
+                    borderWidth: 3
+                }]
+            },
+            options: {
+                responsive: true,
+                maintainAspectRatio: false,
+                plugins: {
+                    legend: {
+                        display: true,
+                        position: 'top'
+                    }
+                },
+                scales: {
+                    y: { beginAtZero: true }
+                }
+            }
+        });
+
+        // Model Distribution
+        const modelCtx = document.getElementById('modelChart').getContext('2d');
+        new Chart(modelCtx, {
+            type: 'doughnut',
+            data: {
+                labels: ["unknown"],
+                datasets: [{
+                    data: [1291],
+                    backgroundColor: [
+                        '#667eea', '#764ba2', '#f093fb', '#4facfe',
+                        '#43e97b', '#fa709a', '#fee140', '#30cfd0',
+                        '#a8edea', '#fed6e3', '#ffecd2', '#fcb69f',
+                        '#ff9a9e', '#fad0c4', '#ffd1ff'
+                    ]
+                }]
+            },
+            options: {
+                responsive: true,
+                maintainAspectRatio: false,
+                plugins: {
+                    legend: {
+                        position: 'right',
+                        labels: {
+                            font: { size: 11 }
+                        }
+                    }
+                }
+            }
+        });
+    </script>
+</body>
+</html>

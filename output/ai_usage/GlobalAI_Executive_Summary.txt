@@ -1,0 +1,60 @@
+======================================================================
+GLOBAL AI PLATFORM EXECUTIVE SUMMARY
+======================================================================
+
+Report Date: November 14, 2025
+
+PLATFORM STATISTICS
+----------------------------------------------------------------------
+Total Instance Accounts: 91
+Unique Users: 84
+Cross-Instance Users: 6
+Total Chats: 1231
+Active Users: 68
+
+INSTANCE BREAKDOWN
+----------------------------------------------------------------------
+RESGPT          -  38 users,  428 chats
+FASGPT          -  38 users,  479 chats
+BERKSHIREGPT    -  15 users,  324 chats
+
+TOP 15 GLOBAL USERS
+----------------------------------------------------------------------
+ 1. AI admin                  [RES/FAS] - 120 chats
+ 2. Lehem Felican             [RES/FAS/BER] -  99 chats
+ 3. Lehem Felican             [FAS/BER] -  61 chats
+ 4. Karl Hester               [RES/BER] -  60 chats
+ 5. Dan Kuang                 [RES] -  60 chats
+ 6. Sophia Bouwkamp           [RES] -  59 chats
+ 7. Enrique De Leonardis      [FAS] -  51 chats
+ 8. Sean Clancy               [FAS] -  38 chats
+ 9. Will Botard               [FAS] -  36 chats
+10. Eric Gutierrez            [RES] -  34 chats
+11. Brian Marentette          [BER] -  32 chats
+12. Taylor Ehrlich            [FAS] -  29 chats
+13. Rachel Rubino             [BER] -  29 chats
+14. Aimee Kirby               [BER] -  29 chats
+15. Bobby Lenahan             [FAS] -  28 chats
+
+TOP 20 GLOBAL TOPICS
+----------------------------------------------------------------------
+ 1. analysis                  - 171 mentions
+ 2. summary                   -  79 mentions
+ 3. overview                  -  79 mentions
+ 4. workforce                 -  55 mentions
+ 5. clone                     -  54 mentions
+ 6. employment                -  45 mentions
+ 7. employee                  -  41 mentions
+ 8. labor                     -  41 mentions
+ 9. deposition                -  40 mentions
+10. financial                 -  38 mentions
+11. review                    -  37 mentions
+12. article                   -  37 mentions
+13. report                    -  37 mentions
+14. economics                 -  35 mentions
+15. comparison                -  29 mentions
+16. extraction                -  28 mentions
+17. assistance                -  25 mentions
+18. count                     -  24 mentions
+19. request                   -  23 mentions
+20. excel                     -  23 mentions

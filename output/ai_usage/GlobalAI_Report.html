@@ -1,0 +1,573 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Global AI Platform Analytics</title>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            padding: 20px;
+            color: #333;
+        }
+
+        .container {
+            max-width: 1600px;
+            margin: 0 auto;
+            background: white;
+            border-radius: 20px;
+            box-shadow: 0 20px 60px rgba(0,0,0,0.3);
+            overflow: hidden;
+        }
+
+        .header {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 50px;
+            text-align: center;
+        }
+
+        .header h1 {
+            font-size: 3em;
+            margin-bottom: 10px;
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.2);
+        }
+
+        .header .subtitle {
+            font-size: 1.2em;
+            opacity: 0.95;
+        }
+
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 20px;
+            padding: 40px;
+            background: #f8f9fa;
+        }
+
+        .stat-card {
+            background: white;
+            padding: 25px;
+            border-radius: 15px;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+            transition: transform 0.3s, box-shadow 0.3s;
+            text-align: center;
+        }
+
+        .stat-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 25px rgba(0,0,0,0.15);
+        }
+
+        .stat-card .label {
+            font-size: 0.85em;
+            color: #666;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            margin-bottom: 10px;
+        }
+
+        .stat-card .value {
+            font-size: 2.2em;
+            font-weight: bold;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        .stat-card .subvalue {
+            font-size: 0.85em;
+            color: #999;
+            margin-top: 8px;
+        }
+
+        .section {
+            padding: 40px;
+        }
+
+        .section-title {
+            font-size: 2em;
+            margin-bottom: 30px;
+            color: #333;
+            border-bottom: 4px solid #667eea;
+            padding-bottom: 15px;
+            display: inline-block;
+        }
+
+        .charts-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(500px, 1fr));
+            gap: 30px;
+            margin: 30px 0;
+        }
+
+        .chart-container {
+            position: relative;
+            height: 400px;
+            background: white;
+            padding: 25px;
+            border-radius: 15px;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+        }
+
+        .chart-title {
+            font-size: 1.3em;
+            margin-bottom: 20px;
+            color: #667eea;
+            font-weight: 600;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            background: white;
+            border-radius: 15px;
+            overflow: hidden;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+            margin: 20px 0;
+        }
+
+        th {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 18px 15px;
+            text-align: left;
+            font-weight: 600;
+            font-size: 1em;
+        }
+
+        td {
+            padding: 15px;
+            border-bottom: 1px solid #f0f0f0;
+        }
+
+        tr:hover {
+            background: #f8f9fa;
+        }
+
+        .instance-badge {
+            display: inline-block;
+            padding: 5px 12px;
+            border-radius: 20px;
+            font-size: 0.8em;
+            font-weight: 600;
+            margin: 2px;
+        }
+
+        .badge-resgpt {
+            background: #e3f2fd;
+            color: #1976d2;
+        }
+
+        .badge-fasgpt {
+            background: #f3e5f5;
+            color: #7b1fa2;
+        }
+
+        .badge-berkshiregpt {
+            background: #e8f5e9;
+            color: #388e3c;
+        }
+
+        .cost-section {
+            background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);
+            color: white;
+            padding: 30px;
+            border-radius: 15px;
+            margin: 20px 0;
+        }
+
+        .cost-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 15px;
+            margin-top: 20px;
+        }
+
+        .cost-item {
+            background: rgba(255,255,255,0.2);
+            padding: 15px;
+            border-radius: 10px;
+        }
+
+        .cost-item .cost-label {
+            font-size: 0.9em;
+            opacity: 0.9;
+        }
+
+        .cost-item .cost-value {
+            font-size: 1.8em;
+            font-weight: bold;
+            margin-top: 5px;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>🌐 Global AI Platform Analytics</h1>
+            <div class="subtitle">Comprehensive Analysis Across ResGPT, FASGPT, and BerkshireGPT</div>
+            <div class="subtitle" style="margin-top: 10px; font-size: 0.9em;">Generated on November 16, 2025 at 12:47 AM</div>
+        </div>
+
+        <div class="stats-grid">
+            <div class="stat-card">
+                <div class="label">Total Platforms</div>
+                <div class="value">3</div>
+                <div class="subvalue">ResGPT, FASGPT, BerkshireGPT</div>
+            </div>
+
+            <div class="stat-card">
+                <div class="label">Total Chats</div>
+                <div class="value">1,299</div>
+                <div class="subvalue">Across all platforms</div>
+            </div>
+
+            <div class="stat-card">
+                <div class="label">Azure Cost (MTD)</div>
+                <div class="value">$694.98</div>
+                <div class="subvalue">Month to date</div>
+            </div>
+
+            <div class="stat-card">
+                <div class="label">30-Day Forecast</div>
+                <div class="value">$1303.10</div>
+                <div class="subvalue">Projected spend</div>
+            </div>
+
+            <div class="stat-card">
+                <div class="label">Total Models</div>
+                <div class="value">60</div>
+                <div class="subvalue">18 actively used</div>
+            </div>
+
+            <div class="stat-card">
+                <div class="label">Knowledge Bases</div>
+                <div class="value">67</div>
+                <div class="subvalue">Across all platforms</div>
+            </div>
+        </div>
+
+        <div class="section">
+            <div class="cost-section">
+                <h3>💰 Azure Cost Analysis</h3>
+                <div class="cost-grid">
+                    <div class="cost-item">
+                        <div class="cost-label">Total Actual Cost</div>
+                        <div class="cost-value">$694.98</div>
+                    </div>
+                    <div class="cost-item">
+                        <div class="cost-label">30-Day Forecast</div>
+                        <div class="cost-value">$1303.10</div>
+                    </div>
+                    <div class="cost-item">
+                        <div class="cost-label">Daily Average</div>
+                        <div class="cost-value">$43.44</div>
+                    </div>
+                    <div class="cost-item">
+                        <div class="cost-label">Cost per Chat</div>
+                        <div class="cost-value">$0.535</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="section">
+            <h2 class="section-title">Platform Comparison</h2>
+            <div class="charts-grid">
+                <div class="chart-container">
+                    <div class="chart-title">Chats by Instance</div>
+                    <canvas id="instanceChatsChart"></canvas>
+                </div>
+            </div>
+        </div>
+
+        <div class="section">
+            <h2 class="section-title">Global Usage Trends - Last 30 Days</h2>
+            <div class="chart-container" style="height: 450px;">
+                <canvas id="trendsChart"></canvas>
+            </div>
+        </div>
+
+        <div class="section">
+            <h2 class="section-title">Model Distribution Across All Platforms</h2>
+            <div class="chart-container" style="height: 500px;">
+                <canvas id="modelChart"></canvas>
+            </div>
+        </div>
+
+        <div class="section">
+            <h2 class="section-title">Top Users Across All Platforms</h2>
+            <table>
+                <thead>
+                    <tr>
+                        <th>Rank</th>
+                        <th>Name</th>
+                        <th>Email</th>
+                        <th>Instance</th>
+                        <th>Chats</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    
+                    <tr>
+                        <td>1</td>
+                        <td>Sophia Bouwkamp</td>
+                        <td>sbouwkamp@resecon.com</td>
+                        <td><span class="instance-badge badge-resgpt">RESGPT</span></td>
+                        <td>60</td>
+                    </tr>
+                    
+                    <tr>
+                        <td>2</td>
+                        <td>AI admin</td>
+                        <td>admin@resecon.ai</td>
+                        <td><span class="instance-badge badge-resgpt">RESGPT</span></td>
+                        <td>60</td>
+                    </tr>
+                    
+                    <tr>
+                        <td>3</td>
+                        <td>Dan Kuang</td>
+                        <td>dkuang@resecon.com</td>
+                        <td><span class="instance-badge badge-resgpt">RESGPT</span></td>
+                        <td>60</td>
+                    </tr>
+                    
+                    <tr>
+                        <td>4</td>
+                        <td>Ben Willoughby</td>
+                        <td>bwilloughby@resecon.com</td>
+                        <td><span class="instance-badge badge-fasgpt">FASGPT</span></td>
+                        <td>60</td>
+                    </tr>
+                    
+                    <tr>
+                        <td>5</td>
+                        <td>AI Admin</td>
+                        <td>admin@resecon.ai</td>
+                        <td><span class="instance-badge badge-fasgpt">FASGPT</span></td>
+                        <td>60</td>
+                    </tr>
+                    
+                    <tr>
+                        <td>6</td>
+                        <td>Karl Hester</td>
+                        <td>karl.hester@berkshireassociates.com</td>
+                        <td><span class="instance-badge badge-berkshiregpt">BERKSHIREGPT</span></td>
+                        <td>60</td>
+                    </tr>
+                    
+                    <tr>
+                        <td>7</td>
+                        <td>Lehem Felican</td>
+                        <td>lfelican@resecon.com</td>
+                        <td><span class="instance-badge badge-berkshiregpt">BERKSHIREGPT</span></td>
+                        <td>60</td>
+                    </tr>
+                    
+                    <tr>
+                        <td>8</td>
+                        <td>Lehem Felican</td>
+                        <td>lfelican@resecon.ai</td>
+                        <td><span class="instance-badge badge-berkshiregpt">BERKSHIREGPT</span></td>
+                        <td>60</td>
+                    </tr>
+                    
+                    <tr>
+                        <td>9</td>
+                        <td>Enrique De Leonardis</td>
+                        <td>edeleonardis@resecon.com</td>
+                        <td><span class="instance-badge badge-fasgpt">FASGPT</span></td>
+                        <td>51</td>
+                    </tr>
+                    
+                    <tr>
+                        <td>10</td>
+                        <td>Sean Clancy</td>
+                        <td>sclancy@resecon.com</td>
+                        <td><span class="instance-badge badge-fasgpt">FASGPT</span></td>
+                        <td>38</td>
+                    </tr>
+                    
+                    <tr>
+                        <td>11</td>
+                        <td>Will Botard</td>
+                        <td>wbotard@resecon.com</td>
+                        <td><span class="instance-badge badge-fasgpt">FASGPT</span></td>
+                        <td>38</td>
+                    </tr>
+                    
+                    <tr>
+                        <td>12</td>
+                        <td>Lehem Felican</td>
+                        <td>lfelican@resecon.com</td>
+                        <td><span class="instance-badge badge-resgpt">RESGPT</span></td>
+                        <td>35</td>
+                    </tr>
+                    
+                    <tr>
+                        <td>13</td>
+                        <td>Eric Gutierrez</td>
+                        <td>egutierrez@resecon.com</td>
+                        <td><span class="instance-badge badge-resgpt">RESGPT</span></td>
+                        <td>34</td>
+                    </tr>
+                    
+                    <tr>
+                        <td>14</td>
+                        <td>Brian Marentette</td>
+                        <td>brian.marentette@berkshireassociates.com</td>
+                        <td><span class="instance-badge badge-berkshiregpt">BERKSHIREGPT</span></td>
+                        <td>32</td>
+                    </tr>
+                    
+                    <tr>
+                        <td>15</td>
+                        <td>Aimee Kirby</td>
+                        <td>aimee.kirby@berkshireassociates.com</td>
+                        <td><span class="instance-badge badge-berkshiregpt">BERKSHIREGPT</span></td>
+                        <td>30</td>
+                    </tr>
+                    
+                </tbody>
+            </table>
+        </div>
+
+        <div class="section">
+            <h2 class="section-title">Instance Details</h2>
+            <table>
+                <thead>
+                    <tr>
+                        <th>Instance</th>
+                        <th>Total Chats</th>
+                        <th>Active Models</th>
+                        <th>Knowledge Bases</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    
+                    <tr>
+                        <td><span class="instance-badge badge-resgpt">RESGPT</span></td>
+                        <td>432</td>
+                        <td>9</td>
+                        <td>13</td>
+                    </tr>
+                    
+                    <tr>
+                        <td><span class="instance-badge badge-fasgpt">FASGPT</span></td>
+                        <td>542</td>
+                        <td>7</td>
+                        <td>45</td>
+                    </tr>
+                    
+                    <tr>
+                        <td><span class="instance-badge badge-berkshiregpt">BERKSHIREGPT</span></td>
+                        <td>325</td>
+                        <td>8</td>
+                        <td>9</td>
+                    </tr>
+                    
+                </tbody>
+            </table>
+        </div>
+    </div>
+
+    <script>
+        // Instance Chats Comparison
+        const chatsCtx = document.getElementById('instanceChatsChart').getContext('2d');
+        new Chart(chatsCtx, {
+            type: 'bar',
+            data: {
+                labels: ["RESGPT", "FASGPT", "BERKSHIREGPT"],
+                datasets: [{
+                    label: 'Total Chats',
+                    data: [432, 542, 325],
+                    backgroundColor: ['#667eea', '#764ba2', '#43e97b']
+                }]
+            },
+            options: {
+                responsive: true,
+                maintainAspectRatio: false,
+                plugins: {
+                    legend: { display: false }
+                },
+                scales: {
+                    y: { beginAtZero: true }
+                }
+            }
+        });
+
+        // Global Trends
+        const trendsCtx = document.getElementById('trendsChart').getContext('2d');
+        new Chart(trendsCtx, {
+            type: 'line',
+            data: {
+                labels: ["2025-10-13", "2025-10-14", "2025-10-15", "2025-10-16", "2025-10-17", "2025-10-18", "2025-10-19", "2025-10-20", "2025-10-21", "2025-10-22", "2025-10-23", "2025-10-24", "2025-10-27", "2025-10-28", "2025-10-29", "2025-10-30", "2025-10-31", "2025-11-03", "2025-11-04", "2025-11-05", "2025-11-06", "2025-11-07", "2025-11-08", "2025-11-09", "2025-11-10", "2025-11-11", "2025-11-12", "2025-11-13", "2025-11-14", "2025-11-15"],
+                datasets: [{
+                    label: 'Daily Chats (All Platforms)',
+                    data: [23, 12, 19, 27, 6, 2, 1, 7, 18, 19, 16, 24, 10, 10, 10, 17, 7, 16, 49, 25, 7, 8, 1, 13, 14, 21, 20, 11, 8, 11],
+                    borderColor: '#667eea',
+                    backgroundColor: 'rgba(102, 126, 234, 0.1)',
+                    tension: 0.4,
+                    fill: true,
+                    borderWidth: 3
+                }]
+            },
+            options: {
+                responsive: true,
+                maintainAspectRatio: false,
+                plugins: {
+                    legend: {
+                        display: true,
+                        position: 'top'
+                    }
+                },
+                scales: {
+                    y: { beginAtZero: true }
+                }
+            }
+        });
+
+        // Model Distribution
+        const modelCtx = document.getElementById('modelChart').getContext('2d');
+        new Chart(modelCtx, {
+            type: 'doughnut',
+            data: {
+                labels: ["unknown", "gpt-4.1", "resecon-general-model", "gpt-5", "docuinsight-data-engine-plus", "gpt-4o", "resecon-general-model-gpt5", "dev", "cba-assistant", "resecon-fas-model", "resecon-vision", "grok-3", "predictive-analytics--financial-forecasting", "regulatory-compliance--reporting", "berkshire-general-model-41"],
+                datasets: [{
+                    data: [1119, 8, 91, 2, 3, 2, 2, 1, 8, 8, 3, 1, 4, 1, 44],
+                    backgroundColor: [
+                        '#667eea', '#764ba2', '#f093fb', '#4facfe',
+                        '#43e97b', '#fa709a', '#fee140', '#30cfd0',
+                        '#a8edea', '#fed6e3', '#ffecd2', '#fcb69f',
+                        '#ff9a9e', '#fad0c4', '#ffd1ff'
+                    ]
+                }]
+            },
+            options: {
+                responsive: true,
+                maintainAspectRatio: false,
+                plugins: {
+                    legend: {
+                        position: 'right',
+                        labels: {
+                            font: { size: 11 }
+                        }
+                    }
+                }
+            }
+        });
+    </script>
+</body>
+</html>
