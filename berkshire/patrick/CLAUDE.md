@@ -47,6 +47,9 @@ Input Excel/CSV → UniversityContactFinder → LLM + Web Search → One Row Per
 2. **process_universities.py** - Batch processor for IPEDS dataset
    - Cost/time estimation before processing
    - `--skip-existing` flag to process only universities without contacts
+   - `--exclude-from` flag to skip universities already in other files (with fuzzy matching)
+   - `--fuzzy-threshold` to control matching sensitivity (default: 0.85)
+   - Auto-detects Excel sheet names (no longer requires 'Sheet1')
 
 3. **merge_ir_contacts.py** / **merge_comprehensive_contacts.py** - Database merging utilities
 
@@ -106,6 +109,24 @@ python process_universities.py --input "C:\Users\lfelican\dev\Scripts\data\unive
 - `--max` - Limit number of universities to process
 - `--start-row` - Resume from specific row
 - `--delay` - Seconds between requests (default: 1.0)
+- `--exclude-from` - Skip universities found in these file(s) (supports multiple files)
+- `--fuzzy-threshold` - Similarity threshold for fuzzy matching (0-1, default: 0.85)
+
+### Excluding Already-Processed Universities
+```powershell
+# Exclude universities from one file
+python process_universities.py --input data/universities.csv.xlsx --exclude-from b_schools_contacts_full.xlsx --all
+
+# Exclude from multiple files
+python process_universities.py --input data/universities.csv.xlsx --exclude-from file1.xlsx file2.xlsx --all
+
+# Adjust fuzzy matching (stricter = 0.9, looser = 0.75)
+python process_universities.py --exclude-from existing.xlsx --fuzzy-threshold 0.9 --all
+```
+
+The exclusion feature uses fuzzy matching to handle name variations like:
+- "University of California, Berkeley" vs "UC Berkeley"
+- "Saint Mary's College" vs "St. Mary's College"
 
 ## Key Configuration
 
@@ -130,8 +151,9 @@ Per 100 universities:
 - OpenAI GPT-4o-mini + Tavily: ~$2.50
 - Anthropic Claude + Tavily: ~$5.50
 
-## Recent Processing Results (b_schools_list.xlsx)
+## Recent Processing Results
 
+### HubSpot B-Schools (b_schools_list.xlsx)
 - **Input:** 376 universities
 - **Output:** 601 rows (one per contact)
 - **Contacts found:** 555
@@ -140,6 +162,16 @@ Per 100 universities:
 - **No contacts found:** 45 universities (12%)
 - **Output file:** `b_schools_contacts_full.xlsx`
 
+### Full IPEDS Database Run (January 2026)
+- **Input:** 6,050 universities from IPEDS
+- **Excluded:** 368 (already in b_schools_contacts_full.xlsx via fuzzy matching)
+- **Processed:** 5,682 universities
+- **Contacts found:** 2,654 (~47% success rate)
+- **Output rows:** 6,546
+- **Output file:** `C:\Users\lfelican\dev\Scripts\data\universities.csv_with_contacts.xlsx`
+- **Provider:** Perplexity (sonar model)
+- **Note:** Many smaller/vocational schools (beauty academies, trade schools) don't have General Counsel or OIR offices
+
 ## Important Notes
 
 - Progress auto-saves after each university - safe to interrupt with Ctrl+C
@@ -147,3 +179,5 @@ Per 100 universities:
 - Perplexity provider is recommended (built-in web search, most accurate)
 - Output format is one row per contact for easy sorting/filtering in Excel
 - Universities with no contacts still get a row with `search_status = 'no_contacts_found'`
+- Excel sheet names are auto-detected (no need to specify 'Sheet1')
+- Use `--exclude-from` to avoid reprocessing universities from previous runs

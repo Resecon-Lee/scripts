@@ -16,11 +16,16 @@ import pandas as pd
 import json
 import os
 import time
-from typing import List, Dict, Optional, Literal
+from typing import List, Dict, Optional, Literal, Set
 from datetime import datetime
 from pathlib import Path
 from dataclasses import dataclass, asdict
 import re
+from difflib import SequenceMatcher
+import logging
+
+# Setup logging
+logger = logging.getLogger(__name__)
 
 # Optional imports with graceful fallbacks
 try:
@@ -46,6 +51,188 @@ try:
     load_dotenv()
 except ImportError:
     pass
+
+
+# ============================================================================
+# University Name Normalization and Exclusion Utilities
+# ============================================================================
+
+def normalize_university_name(name: str) -> str:
+    """
+    Normalize a university name for comparison.
+    Removes common variations, punctuation, and standardizes format.
+    """
+    if not name or not isinstance(name, str):
+        return ""
+
+    # Convert to lowercase
+    normalized = name.lower().strip()
+
+    # Remove common suffixes/variations
+    removals = [
+        r'\s*\(.*?\)',  # Remove parenthetical content
+        r',.*$',  # Remove everything after comma (e.g., ", Main Campus")
+        r'\s*-\s*main\s*campus',
+        r'\s*main\s*campus',
+        r'\s*\(hd\d+\)',  # Remove IPEDS data suffix like (HD2024)
+    ]
+    for pattern in removals:
+        normalized = re.sub(pattern, '', normalized, flags=re.IGNORECASE)
+
+    # Standardize common abbreviations
+    replacements = [
+        (r'\buniversity\b', 'univ'),
+        (r'\bcollege\b', 'coll'),
+        (r'\binstitute\b', 'inst'),
+        (r'\btechnology\b', 'tech'),
+        (r'\bpolytechnic\b', 'poly'),
+        (r'\bstate\b', 'st'),
+        (r'\bnorthern\b', 'n'),
+        (r'\bsouthern\b', 's'),
+        (r'\beastern\b', 'e'),
+        (r'\bwestern\b', 'w'),
+        (r'\bsaint\b', 'st'),
+        (r'\bst\.\b', 'st'),
+        (r'\bthe\b', ''),
+        (r'\bof\b', ''),
+        (r'\bat\b', ''),
+        (r'\band\b', ''),
+        (r'\b&\b', ''),
+    ]
+    for pattern, replacement in replacements:
+        normalized = re.sub(pattern, replacement, normalized, flags=re.IGNORECASE)
+
+    # Remove punctuation and extra whitespace
+    normalized = re.sub(r'[^\w\s]', '', normalized)
+    normalized = re.sub(r'\s+', ' ', normalized).strip()
+
+    return normalized
+
+
+def fuzzy_match_score(name1: str, name2: str) -> float:
+    """
+    Calculate fuzzy match score between two university names.
+    Returns a score between 0 and 1, where 1 is a perfect match.
+    """
+    norm1 = normalize_university_name(name1)
+    norm2 = normalize_university_name(name2)
+
+    if not norm1 or not norm2:
+        return 0.0
+
+    # Exact match after normalization
+    if norm1 == norm2:
+        return 1.0
+
+    # Check if one contains the other (substring match)
+    if norm1 in norm2 or norm2 in norm1:
+        return 0.95
+
+    # Use SequenceMatcher for fuzzy matching
+    return SequenceMatcher(None, norm1, norm2).ratio()
+
+
+def load_exclusion_universities(
+    exclude_files: List[str],
+    university_columns: Optional[List[str]] = None
+) -> Set[str]:
+    """
+    Load university names from exclusion files.
+
+    Args:
+        exclude_files: List of Excel/CSV file paths to load
+        university_columns: Column names to check for university names
+                          (tries common names if not specified)
+
+    Returns:
+        Set of normalized university names to exclude
+    """
+    if not exclude_files:
+        return set()
+
+    # Common column names for university
+    default_columns = [
+        'university', 'University', 'UNIVERSITY',
+        'Institution Name', 'institution_name', 'institution',
+        'school', 'School', 'college', 'College',
+        'name', 'Name'
+    ]
+    columns_to_try = university_columns or default_columns
+
+    excluded_names = set()
+    excluded_raw = set()  # Keep raw names for reporting
+
+    for file_path in exclude_files:
+        if not os.path.exists(file_path):
+            print(f"  [WARNING] Exclusion file not found: {file_path}")
+            continue
+
+        try:
+            # Read file
+            if file_path.lower().endswith('.csv'):
+                df = pd.read_csv(file_path)
+            else:
+                df = pd.read_excel(file_path)
+
+            # Find university column
+            uni_col = None
+            for col in columns_to_try:
+                if col in df.columns:
+                    uni_col = col
+                    break
+
+            if uni_col is None:
+                print(f"  [WARNING] No university column found in {file_path}")
+                print(f"            Available columns: {list(df.columns)[:5]}...")
+                continue
+
+            # Extract unique university names
+            universities = df[uni_col].dropna().unique()
+            for uni in universities:
+                if isinstance(uni, str) and uni.strip():
+                    excluded_raw.add(uni.strip())
+                    excluded_names.add(normalize_university_name(uni))
+
+            print(f"  [LOADED] {len(universities)} universities from {os.path.basename(file_path)}")
+
+        except Exception as e:
+            print(f"  [ERROR] Failed to load {file_path}: {str(e)}")
+
+    return excluded_names
+
+
+def is_university_excluded(
+    university_name: str,
+    excluded_set: Set[str],
+    fuzzy_threshold: float = 0.85
+) -> tuple[bool, Optional[str]]:
+    """
+    Check if a university should be excluded (already processed).
+
+    Args:
+        university_name: Name of university to check
+        excluded_set: Set of normalized excluded university names
+        fuzzy_threshold: Minimum score for fuzzy match (0.85 = 85% similar)
+
+    Returns:
+        Tuple of (is_excluded, matched_name or None)
+    """
+    if not university_name or not excluded_set:
+        return False, None
+
+    normalized = normalize_university_name(university_name)
+
+    # Exact match (after normalization)
+    if normalized in excluded_set:
+        return True, university_name
+
+    # Fuzzy match against all excluded names
+    for excluded in excluded_set:
+        score = SequenceMatcher(None, normalized, excluded).ratio()
+        if score >= fuzzy_threshold:
+            return True, f"{university_name} (fuzzy match: {score:.0%})"
+
+    return False, None
 
 
 @dataclass
@@ -417,7 +604,9 @@ Important:
         sheet_name: str = "Sheet1",
         start_row: int = 0,
         max_universities: Optional[int] = None,
-        skip_existing: bool = False
+        skip_existing: bool = False,
+        exclude_files: Optional[List[str]] = None,
+        fuzzy_threshold: float = 0.85
     ) -> pd.DataFrame:
         """
         Process Excel or CSV file with university names and add contact information.
@@ -431,6 +620,8 @@ Important:
             start_row: Row to start from (for resuming)
             max_universities: Maximum number of universities to process (None for all)
             skip_existing: Skip universities that already have contacts (default: False)
+            exclude_files: List of files containing already-processed universities to skip
+            fuzzy_threshold: Minimum similarity score (0-1) for fuzzy matching (default: 0.85)
 
         Returns:
             DataFrame with results (one row per contact)
@@ -447,7 +638,15 @@ Important:
             df_input = pd.read_csv(input_file)
             file_type = 'csv'
         else:
-            df_input = pd.read_excel(input_file, sheet_name=sheet_name)
+            # Try specified sheet, fall back to first sheet if not found
+            try:
+                df_input = pd.read_excel(input_file, sheet_name=sheet_name)
+            except ValueError:
+                # Sheet not found, use first sheet
+                xl = pd.ExcelFile(input_file)
+                actual_sheet = xl.sheet_names[0]
+                print(f"  [NOTE] Sheet '{sheet_name}' not found, using '{actual_sheet}'")
+                df_input = pd.read_excel(input_file, sheet_name=actual_sheet)
             file_type = 'excel'
 
         if university_column not in df_input.columns:
@@ -467,6 +666,40 @@ Important:
             print(f"  Skipping {skipped_count} universities with existing contacts")
             print(f"  {len(df_to_process)} universities need contact info")
             df_input = df_to_process
+
+        # Load exclusion list from external files
+        excluded_universities = set()
+        if exclude_files:
+            print(f"\n[EXCLUSION] Loading universities to exclude...")
+            excluded_universities = load_exclusion_universities(exclude_files)
+            print(f"  Total unique universities to exclude: {len(excluded_universities)}")
+
+            # Filter out excluded universities
+            if excluded_universities:
+                universities_to_skip = []
+                universities_to_process = []
+
+                for idx, row in df_input.iterrows():
+                    uni_name = row[university_column]
+                    is_excluded, match_info = is_university_excluded(
+                        uni_name, excluded_universities, fuzzy_threshold
+                    )
+                    if is_excluded:
+                        universities_to_skip.append((idx, uni_name, match_info))
+                    else:
+                        universities_to_process.append(idx)
+
+                if universities_to_skip:
+                    print(f"\n  [SKIP] Excluding {len(universities_to_skip)} already-processed universities:")
+                    # Show first 10 examples
+                    for i, (idx, name, match) in enumerate(universities_to_skip[:10]):
+                        print(f"         - {name}")
+                    if len(universities_to_skip) > 10:
+                        print(f"         ... and {len(universities_to_skip) - 10} more")
+
+                    # Keep only non-excluded universities
+                    df_input = df_input.loc[universities_to_process]
+                    print(f"\n  [REMAINING] {len(df_input)} universities to process")
 
         if max_universities:
             df_input = df_input.head(max_universities)

@@ -116,6 +116,15 @@ Examples:
 
   # Use Claude for higher quality
   python process_universities.py --provider anthropic --max 50
+
+  # Exclude already-processed universities from one file
+  python process_universities.py --exclude-from b_schools_contacts_full.xlsx --max 100
+
+  # Exclude from multiple files
+  python process_universities.py --exclude-from file1.xlsx file2.xlsx --max 100
+
+  # Adjust fuzzy matching sensitivity (0.9 = stricter, 0.75 = looser)
+  python process_universities.py --exclude-from existing.xlsx --fuzzy-threshold 0.9
         """
     )
 
@@ -139,6 +148,10 @@ Examples:
     parser.add_argument("--output", help="Output file path (default: data/universities_with_contacts.xlsx)")
     parser.add_argument("--skip-existing", action="store_true",
                        help="Skip universities that already have contacts (for merged files)")
+    parser.add_argument("--exclude-from", nargs='+', metavar="FILE",
+                       help="Skip universities found in these file(s). Supports multiple files.")
+    parser.add_argument("--fuzzy-threshold", type=float, default=0.85,
+                       help="Fuzzy matching threshold (0-1) for exclusions (default: 0.85)")
     parser.add_argument("--no-confirm", action="store_true",
                        help="Skip confirmation prompt")
 
@@ -222,6 +235,9 @@ Examples:
         print(f"[CONFIG] Starting from row: {args.start}")
     if max_universities:
         print(f"[CONFIG] Max universities: {max_universities}")
+    if args.exclude_from:
+        print(f"[CONFIG] Excluding universities from: {', '.join(args.exclude_from)}")
+        print(f"[CONFIG] Fuzzy match threshold: {args.fuzzy_threshold:.0%}")
     print()
 
     start_time = datetime.now()
@@ -233,7 +249,9 @@ Examples:
             university_column="Institution Name",  # The actual column name in your file
             start_row=args.start,
             max_universities=max_universities,
-            skip_existing=args.skip_existing
+            skip_existing=args.skip_existing,
+            exclude_files=args.exclude_from,
+            fuzzy_threshold=args.fuzzy_threshold
         )
 
         end_time = datetime.now()
